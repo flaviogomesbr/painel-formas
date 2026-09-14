@@ -1,0 +1,1262 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Produtividade — Montagem e desmontagem de fôrmas de parede de concreto</title>
+<style>
+:root{
+  --paper:#F2F4F7; --surface:#FFFFFF; --ink:#17202A; --muted:#69737F;
+  --rule:#C9D2DE; --rule-soft:#E3E8EF;
+  --navy:#1F3864; --azul:#2E75B6; --teal:#4EC3B4; --amarelo:#F2B705;
+  --serena:#35B8A8; --penha:#F2B705; --itaquera:#1F3864;
+  --alerta:#E00000; --ok:#2C6E3F; --meta:#9AA3A0;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Roboto Mono", Menlo, Consolas, monospace;
+  --sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.012em}
+a{color:inherit}
+.wrap{max-width:1400px;margin:0 auto;padding:0 22px 80px}
+
+/* ---------- cabeçalho ---------- */
+header.top{background:var(--navy);color:#fff;border-bottom:3px solid var(--azul)}
+header.top h1{color:#fff}
+header.top h1 .sub{color:#C6D4E8}
+header.top .meta-obra{color:#C6D4E8}
+header.top .meta-obra b{color:#fff}
+.top-in{max-width:1400px;margin:0 auto;padding:26px 22px 20px;display:flex;flex-wrap:wrap;gap:24px;align-items:flex-end;justify-content:space-between}
+h1{font-size:25px;line-height:1.15;max-width:22ch}
+h1 .sub{display:block;font-size:14px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:6px;max-width:44ch}
+.meta-obra{font-family:var(--mono);font-size:11.5px;color:var(--muted);text-align:right;line-height:1.7}
+.meta-obra b{color:var(--ink);font-weight:600}
+
+/* ---------- abas ---------- */
+nav.abas{display:flex;gap:2px;max-width:1400px;margin:0 auto;padding:0 22px}
+nav.abas button{
+  font:inherit;font-size:13.5px;font-weight:500;border:1px solid var(--rule);border-bottom:none;
+  background:#E3E7E3;color:var(--muted);padding:9px 18px;border-radius:3px 3px 0 0;cursor:pointer;margin-top:-1px;position:relative;top:1px
+}
+nav.abas button[aria-selected="true"]{background:var(--surface);color:var(--ink);font-weight:600}
+nav.abas button:focus-visible{outline:2px solid var(--itaquera);outline-offset:1px}
+
+/* ---------- barra de filtros ---------- */
+.filtros{background:var(--surface);border:1px solid var(--rule);border-radius:0 3px 3px 3px;
+  padding:13px 18px 14px;display:flex;flex-direction:column;gap:11px;margin-bottom:18px}
+.filtros .linha{display:flex;flex-wrap:wrap;gap:22px;align-items:center}
+.filtros .linha+.linha{border-top:1px solid var(--rule-soft);padding-top:12px}
+.filtros .linha-obras{gap:12px}
+.filtros .linha-obras .grupo{align-items:flex-start;width:100%}
+.filtros .linha-obras .grupo>.rot{padding-top:6px;flex:0 0 auto}
+.grupo{display:flex;align-items:center;gap:9px}
+.grupo>span.rot{font-size:11.5px;color:var(--muted);font-weight:500}
+.chip{
+  font:inherit;font-size:12.5px;border:1px solid var(--rule);background:#F4F6F4;color:var(--muted);
+  padding:5px 11px;border-radius:99px;cursor:pointer;display:inline-flex;align-items:center;gap:6px
+}
+.chip .pt{width:8px;height:8px;border-radius:2px;background:currentColor;opacity:.35}
+.chip[aria-pressed="true"]{background:var(--surface);color:var(--ink);border-color:currentColor;font-weight:600}
+.chip[aria-pressed="true"] .pt{opacity:1}
+.chip:focus-visible{outline:2px solid var(--itaquera);outline-offset:2px}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:3px}
+.seg button{font:inherit;font-size:12.5px;border:0;background:#F4F6F4;color:var(--muted);
+  padding:5px 12px;cursor:pointer;position:relative;display:inline-flex;align-items:center;gap:7px}
+.seg button:first-child{border-radius:2px 0 0 2px}
+.seg button:last-child{border-radius:0 2px 2px 0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff;font-weight:600}
+input[type=number],input[type=range]{font:inherit}
+input[type=number]{font-family:var(--mono);width:74px;padding:4px 7px;border:1px solid var(--rule);border-radius:3px;background:var(--surface);color:var(--ink)}
+.ajuda{position:relative;display:inline-flex;align-items:center;justify-content:center;
+  width:15px;height:15px;border-radius:50%;border:1.5px solid currentColor;color:inherit;
+  font-size:10px;font-weight:700;font-family:var(--sans);line-height:1;cursor:help;
+  user-select:none;flex:0 0 auto;opacity:.75}
+.ajuda:hover,.ajuda.aberto{opacity:1}
+.seg button[aria-pressed="true"] .ajuda{border-color:#fff;color:#fff}
+.ajuda .balao{
+  position:absolute;bottom:calc(100% + 9px);left:50%;transform:translateX(-50%);
+  width:min(330px,80vw);background:var(--surface);color:var(--ink);border:1px solid var(--rule);
+  border-radius:5px;box-shadow:0 6px 18px rgba(16,28,48,.16);padding:11px 13px;
+  font-size:12px;font-weight:400;line-height:1.5;text-align:left;cursor:auto;
+  opacity:0;visibility:hidden;transition:opacity .12s ease;z-index:50}
+.ajuda:hover .balao,.ajuda.aberto .balao,.seg button:focus-visible .balao{opacity:1;visibility:visible}
+.ajuda .balao{color:var(--ink);font-weight:400;opacity:0}
+.ajuda .balao b{display:block;color:var(--navy);font-size:12px;margin-bottom:5px}
+.ajuda .balao em{display:block;margin-top:7px;font-style:normal;color:var(--muted);font-size:11.5px}
+.ajuda .balao::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:var(--rule)}
+@media(prefers-reduced-motion:reduce){.ajuda .balao{transition:none}}
+select.sel{font:inherit;font-size:12.5px;padding:5px 8px;border:1px solid var(--rule);border-radius:3px;
+  background:var(--surface);color:var(--ink);cursor:pointer;min-width:132px}
+select.sel:focus-visible{outline:2px solid var(--itaquera);outline-offset:1px}
+label.check{display:inline-flex;gap:7px;align-items:center;font-size:12.5px;color:var(--muted);cursor:pointer}
+
+/* controle único de período */
+.periodo{align-items:flex-start}
+.faixa{position:relative;width:340px;height:26px}
+.faixa .trilha{position:absolute;top:11px;left:0;right:0;height:4px;background:var(--rule);border-radius:2px}
+.faixa .cheia{position:absolute;top:11px;height:4px;background:var(--ink);border-radius:2px}
+.faixa input[type=range]{position:absolute;top:0;left:0;width:100%;height:26px;margin:0;background:none;
+  -webkit-appearance:none;appearance:none;pointer-events:none}
+.faixa input[type=range]::-webkit-slider-runnable-track{height:4px;background:transparent;margin-top:11px}
+.faixa input[type=range]::-moz-range-track{height:4px;background:transparent}
+.faixa input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;width:15px;height:15px;
+  margin-top:-5.5px;border-radius:50%;background:var(--surface);border:2px solid var(--ink);cursor:ew-resize}
+.faixa input[type=range]::-moz-range-thumb{pointer-events:auto;width:15px;height:15px;border-radius:50%;
+  background:var(--surface);border:2px solid var(--ink);cursor:ew-resize}
+.faixa input[type=range]:focus-visible::-webkit-slider-thumb{outline:2px solid var(--itaquera);outline-offset:2px}
+.faixa input[type=range]:focus-visible::-moz-range-thumb{outline:2px solid var(--itaquera);outline-offset:2px}
+.escala{position:relative;width:340px;height:24px;margin-top:-2px}
+.escala span{position:absolute;font-size:9.5px;color:var(--muted);transform:translateX(-50%);white-space:nowrap;top:6px}
+.escala i{position:absolute;top:0;width:1px;height:4px;background:var(--rule);transform:translateX(-50%)}
+.leitura{font-family:var(--mono);font-size:12px;color:var(--ink);font-weight:600;white-space:nowrap}
+.colper{display:flex;flex-direction:column;gap:2px}
+
+/* ---------- KPIs ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule);margin-bottom:18px}
+.kpi{background:var(--surface);padding:13px 15px 14px}
+.kpi .v{font-family:var(--mono);font-size:23px;font-weight:600;letter-spacing:-.02em;display:block;line-height:1.15}
+.kpi .u{font-family:var(--mono);font-size:12px;color:var(--muted);font-weight:400}
+.kpi .l{font-size:11.5px;color:var(--muted);margin-top:3px;display:block}
+
+/* cartões e painéis no padrão do print */
+.cartoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:18px 0}
+.cartao{background:var(--surface);border:2px solid var(--navy);border-radius:5px;padding:12px 14px 13px;text-align:center}
+.cartao .rot{font-size:10.5px;font-weight:700;color:var(--navy);letter-spacing:.02em;line-height:1.3}
+.cartao .sub{font-size:12.5px;font-weight:700;color:var(--ink);margin-top:7px}
+.cartao .val{font-family:var(--mono);font-size:29px;font-weight:700;color:var(--ink);line-height:1.1;margin-top:5px}
+.cartao .uni{font-size:10.5px;color:var(--muted);margin-top:3px}
+.notaCartao{font-size:11px;color:var(--muted);margin:-8px 0 14px 2px}
+.quadro{background:var(--surface);border:1px solid var(--rule);border-radius:5px;padding:13px 15px 15px;margin-bottom:16px}
+.quadro>h2{font-size:12.5px;font-weight:700;color:var(--azul);letter-spacing:.02em}
+.quadro>h2 .n{color:var(--azul);margin-right:5px}
+.quadro>p.uni{font-size:10.5px;color:var(--muted);margin:2px 0 10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g23{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g2>.quadro,.g23>.quadro{margin-bottom:0;min-width:0}
+@media(max-width:900px){.g2,.g23{grid-template-columns:1fr}}
+.caixinha{border:1px solid var(--rule);background:#F4F7FB;border-radius:4px;padding:6px 10px;font-size:11px;
+  color:var(--muted);text-align:center;margin-top:10px}
+
+/* mapa de calor */
+.mapa{overflow-x:auto;max-width:100%}
+.mapa table{border-collapse:separate;border-spacing:1px;font-size:11px}
+.mapa th{background:var(--surface);color:var(--navy);font-size:10.5px;font-weight:700;padding:4px 6px;
+  border:1px solid var(--rule);text-align:center;position:sticky;top:0}
+.mapa th.obra{left:0;z-index:3;text-align:left;min-width:112px}
+.mapa td{padding:4px 6px;text-align:center;font-family:var(--mono);border:1px solid #fff;color:#1A2129}
+.mapa td.obra{background:var(--surface);color:var(--ink);font-family:var(--sans);text-align:left;
+  font-weight:600;border:1px solid var(--rule);position:sticky;left:0;z-index:2;white-space:nowrap}
+.escalaCor{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:10.5px;color:var(--muted)}
+.escalaCor .barra{height:12px;flex:0 0 240px;border-radius:2px;border:1px solid var(--rule);
+  background:linear-gradient(90deg,#F8696B 0%,#FFEB84 50%,#63BE7B 100%)}
+.rodape-per{font-size:11.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:11px;margin-top:4px}
+
+/* ---------- painéis ---------- */
+.painel{background:var(--surface);border:1px solid var(--rule);padding:16px 18px 18px;margin-bottom:18px}
+.painel>h2{font-size:15px;margin-bottom:2px}
+.painel>p.nota{font-size:12.5px;color:var(--muted);margin:0 0 14px;max-width:78ch}
+.grade2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grade2>.painel{margin-bottom:0}
+@media(max-width:900px){.grade2{grid-template-columns:1fr}}
+
+svg.g{display:block;width:100%;height:auto;overflow:visible}
+.rolavel{overflow-x:auto;overflow-y:hidden;padding-bottom:2px}
+.rolavel svg.g{max-width:none}
+svg text{font-family:var(--sans);fill:var(--muted);font-size:10.5px}
+svg text.num{font-family:var(--mono)}
+.legenda{display:flex;flex-wrap:wrap;gap:16px;font-size:12px;color:var(--muted);margin-top:10px;align-items:center}
+.legenda i{display:inline-block;width:16px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.legenda i.dash{height:0;border-top:2px dashed var(--meta)}
+
+/* ---------- tabelas ---------- */
+.tabwrap{overflow:auto;max-height:460px;border:1px solid var(--rule-soft)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{padding:6px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--rule-soft)}
+th{position:sticky;top:0;background:#F4F6F4;font-weight:600;font-size:11px;color:var(--muted);text-align:right;z-index:2;border-bottom:1px solid var(--rule)}
+th:first-child,td:first-child,th.esq,td.esq{text-align:left}
+td.n{font-family:var(--mono)}
+tbody tr:hover{background:#F7F9F7}
+td.baixo{color:var(--alerta);font-weight:600}
+td.alto{color:var(--ok);font-weight:600}
+.tagobra{display:inline-flex;align-items:center;gap:6px}
+.tagobra .pt{width:7px;height:7px;border-radius:2px}
+
+.aviso{border-left:3px solid var(--alerta);background:#FCF3F2;padding:11px 14px;font-size:12.5px;margin-bottom:18px;color:#5D2A25;max-width:100ch}
+.aviso b{color:var(--alerta)}
+.info{border-left:3px solid var(--itaquera);background:#F1F3FA;padding:11px 14px;font-size:12.5px;margin-bottom:18px;max-width:100ch}
+
+.oculto{display:none}
+.vazio{padding:40px 0;text-align:center;color:var(--muted);font-size:13px}
+@media (prefers-reduced-motion:no-preference){
+  .kpi .v{transition:none}
+}
+.param{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px 22px;margin-bottom:16px}
+.param label{font-size:11.5px;color:var(--muted);display:block}
+.param label span{display:block;margin-bottom:4px}
+.param input{width:100%}
+footer.fim{font-size:11.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:14px;max-width:100ch}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <h1>Produtividade de montadores de fôrma
+      <span class="sub">Montagem e desmontagem de parede de concreto — <span data-uni="simples"></span></span>
+    </h1>
+    <div class="meta-obra">
+      Fonte: <b>Produt_Montagem-Formas_R02</b> · <b id="metaOrigem">carregando…</b><br>
+      Atualização da planilha: <b id="metaAtu">—</b><br>
+      Dados gerados em: <b id="metaGerado">—</b><br>
+      Obras: <b id="metaObras">—</b>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="abas" role="tablist">
+    <button role="tab" id="tab-prod" aria-selected="true" aria-controls="p-prod">Produtividade</button>
+    <button role="tab" id="tab-custo" aria-selected="false" aria-controls="p-custo">Custo integrado (em desenvolvimento)</button>
+    <button role="tab" id="tab-dados" aria-selected="false" aria-controls="p-dados">Banco de dados semanal</button>
+  </nav>
+
+  <div class="filtros">
+    <div class="linha linha-obras">
+    <div class="grupo"><span class="rot">Obra</span><span id="chipsObra" style="display:flex;gap:7px;flex-wrap:wrap"></span></div>
+    </div>
+    <div class="linha">
+    <div class="grupo"><span class="rot">Unidade</span>
+      <div class="seg" id="segUnid">
+        <button data-u="m2" aria-pressed="true">m²/dia</button>
+        <button data-u="m3" aria-pressed="false">m³/dia</button>
+        <button data-u="h" aria-pressed="false">m²/h</button>
+        <button data-u="concr" aria-pressed="false">concret./sem</button>
+      </div>
+    </div>
+    <div class="grupo"><span class="rot">Média</span>
+      <div class="seg" id="segMedia">
+        <button data-t="0" aria-pressed="true">comum</button>
+        <button data-t="1" aria-pressed="false" aria-describedby="dicaP15">tratada (P15)<span class="ajuda" id="ajudaP15" aria-hidden="true">i<span class="balao" id="dicaP15" role="tooltip"><b>Média tratada (percentil 15)</b>Média da produtividade desconsiderando aproximadamente os 15% menores resultados (dias atípicos), utilizando o percentil 15.<em>Dias atípicos se referem à grua quebrada, dias chuvosos, reunião do sindicato, curva de aprendizagem, etc.</em></span></span></button>
+      </div>
+    </div>
+    <div class="grupo"><span class="rot">Meta</span>
+      <input type="number" id="inMeta" value="40" min="0" step="0.5">
+      <span class="rot" id="unMeta">m²/dia·montador</span>
+    </div>
+    <div class="grupo"><span class="rot">Mês</span>
+      <select class="sel" id="selMes" aria-label="Filtrar por mês"><option value="todos">Todos os meses</option></select>
+    </div>
+    <div class="grupo periodo"><span class="rot" style="padding-top:5px">Período</span>
+      <div class="colper">
+        <div class="faixa">
+          <div class="trilha"></div><div class="cheia" id="faixaCheia"></div>
+          <input type="range" id="rgIni" aria-label="Início do período">
+          <input type="range" id="rgFim" aria-label="Fim do período">
+        </div>
+        <div class="escala" id="escalaMeses"></div>
+      </div>
+      <span class="leitura" id="lblPeriodo" style="padding-top:5px">—</span>
+      <button class="chip" id="btTudo" style="padding-top:4px">Período inteiro</button>
+    </div>
+    <label class="check"><input type="checkbox" id="ckZero"> mostrar semanas sem produção</label>
+    <label class="check"><input type="checkbox" id="ckAltus"> Altus Vila Prudente como benchmark</label>
+    </div>
+  </div>
+
+  <!-- ============ ABA PRODUTIVIDADE ============ -->
+  <section id="p-prod" role="tabpanel" aria-labelledby="tab-prod">
+
+    <div class="cartoes" id="cartoes"></div>
+    <div id="notaCartoes"></div>
+
+    <div class="g2">
+      <div class="quadro">
+        <h2><span class="n">1.</span>MÉDIA X MÁXIMO POR OBRA</h2>
+        <p class="uni" data-uni="simples"></p>
+        <div id="g1"></div>
+      </div>
+      <div class="quadro">
+        <h2><span class="n">2.</span>RANKING DA PRODUTIVIDADE MÉDIA</h2>
+        <p class="uni" data-uni="simples"></p>
+        <div id="g2"></div>
+        <div class="legenda" id="legG2"></div>
+      </div>
+    </div>
+
+    <div class="quadro" style="margin-top:16px">
+      <h2><span class="n">3.</span>EVOLUÇÃO SEMANAL (MÉDIA)</h2>
+      <p class="uni" data-uni="simples"></p>
+      <div id="g3"></div>
+      <div class="legenda" id="legG3"></div>
+    </div>
+
+    <div class="g23">
+      <div class="quadro">
+        <h2><span class="n">4.</span>PRODUTIVIDADE X TAMANHO DA EQUIPE</h2>
+        <p class="uni" data-uni="simples"></p>
+        <div id="g4"></div>
+        <div class="caixinha">Cada ponto representa a média da obra no período selecionado.</div>
+      </div>
+      <div class="quadro">
+        <h2><span class="n">5.</span>MAPA DE CALOR: PRODUTIVIDADE MÉDIA</h2>
+        <p class="uni" data-uni="semanal"></p>
+        <div class="mapa" id="g5"></div>
+        <div class="escalaCor"><span>Baixa produtividade</span><span class="barra"></span><span>Alta produtividade</span></div>
+        <div class="legenda" id="legG5"></div>
+      </div>
+    </div>
+
+    <div class="rodape-per" id="rodapePeriodo"></div>
+  </section>
+
+  <!-- ============ ABA CUSTO ============ -->
+  <section id="p-custo" role="tabpanel" aria-labelledby="tab-custo" class="oculto">
+    <div class="info">
+      Módulo alimentado por <b>BD-Custos</b> (salários com encargos) e pela aba <b>Área Forma</b> da planilha
+      <b>M_O_ESTRUTURA</b> (R$/m² orçado de parede). Como o apontamento cobre montagem e desforma, o custo
+      calculado é diretamente comparável ao orçado de parede. Os parâmetros abaixo são editáveis — altere-os
+      e todos os números da aba recalculam.
+    </div>
+
+    <div class="painel">
+      <h2>Parâmetros do cálculo</h2>
+      <p class="nota">Salários já com encargos, conforme BD-Custos (fator 1,90 sobre o salário base).</p>
+      <div class="param">
+        <label><span>Montador — R$/mês com encargos</span><input type="number" id="cMont" value="5510" step="10"></label>
+        <label><span>Ajudante — R$/mês com encargos</span><input type="number" id="cAjud" value="4377.13" step="10"></label>
+        <label><span>Ajudantes por montador</span><input type="number" id="cRatio" value="0" step="0.1" min="0"></label>
+        <label><span>Grua — R$/mês</span><input type="number" id="cGrua" value="60000" step="1000"></label>
+        <label><span>Rateio da grua para montagem (%)</span><input type="number" id="cRat" value="0" step="5" min="0" max="100"></label>
+        <label><span>Semanas por mês</span><input type="number" id="cSem" value="4.345" step="0.005"></label>
+      </div>
+      <div class="kpis" id="kpisCusto"></div>
+    </div>
+
+    <div class="grade2">
+      <div class="painel">
+        <h2>Custo unitário do ciclo por semana</h2>
+        <p class="nota">R$ por m² de fôrma, cobrindo montagem e desforma. Semanas com efetivo parado e pouca área produzida aparecem como picos.</p>
+        <div id="gCustoSem"></div>
+        <div class="legenda" id="legCustoSem"></div>
+      </div>
+      <div class="painel">
+        <h2>Realizado × orçado</h2>
+        <p class="nota">O orçado da aba Área Forma cobre o escopo de parede. O realizado cobre a equipe do ciclo de fôrma (montagem e desforma) — a diferença restante corresponde a apoio, armação e concretagem.</p>
+        <div id="gCustoObra"></div>
+        <div class="legenda" id="legCustoObra"></div>
+      </div>
+    </div>
+
+    <div class="painel">
+      <h2>Fechamento por obra</h2>
+      <div class="tabwrap"><table id="tabCusto"></table></div>
+    </div>
+
+    <div class="painel">
+      <h2>Referências de orçamento — aba Área Forma</h2>
+      <p class="nota">Base completa da planilha de mão de obra, incluindo obras que ainda não têm apontamento de produtividade.</p>
+      <div class="tabwrap"><table id="tabAF"></table></div>
+    </div>
+  </section>
+
+  <!-- ============ ABA DADOS ============ -->
+  <section id="p-dados" role="tabpanel" aria-labelledby="tab-dados" class="oculto">
+    <div class="painel">
+      <h2>Banco de dados semanal</h2>
+      <p class="nota">Uma linha por semana e obra. Células em vermelho ficaram abaixo da meta definida no filtro.</p>
+      <div class="tabwrap"><table id="tabSem"></table></div>
+    </div>
+    <div class="painel">
+      <h2>Campos complementares sugeridos</h2>
+      <p class="nota">O ciclo já está coberto. Estes campos separariam as duas operações e explicariam as semanas fora da meta.</p>
+      <div class="tabwrap"><table id="tabSug"></table></div>
+    </div>
+    <footer class="fim" id="rodape"></footer>
+  </section>
+</div>
+
+<script id="dados" type="application/json">{"geradoEm":"2026-09-14T01:13:25+00:00","atualizacaoPlanilha":"2026-09-11","semanas":[{"obra":"Altus Vila Prudente","ano":2024,"sem":50,"periodo":"09/12/24 a 14/12/24","ini":"2024-12-09","mes":"2024-12-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":699.42,"vol":52.0,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":69.942,"pm2dia":12.7167,"pm2h":1.4451,"pm3dia":0.9455,"pm3h":0.1074,"esp":0.0743,"rup":0.692,"obs":"","detalhe":[{"data":"2024-12-10","torre":"Torre 02","pavto":"Térreo","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2024,"sem":51,"periodo":"16/12/24 a 21/12/24","ini":"2024-12-16","mes":"2024-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2024,"sem":52,"periodo":"23/12/24 a 28/12/24","ini":"2024-12-23","mes":"2024-12-01","concr":1.0,"sabado":"SIM","feriados":1.0,"area":579.96,"vol":60.0,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":57.996,"pm2dia":12.888,"pm2h":1.4645,"pm3dia":1.3333,"pm3h":0.1515,"esp":0.1035,"rup":0.6828,"obs":"","detalhe":[{"data":"2024-12-23","torre":"Torre 02","pavto":"Térreo","trecho":"1","area":579.96,"vol":60.0}]},{"obra":"Altus Vila Prudente","ano":2024,"sem":1,"periodo":"30/12/24 a 04/01/25","ini":"2024-12-30","mes":"2024-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":2,"periodo":"06/01/25 a 11/01/25","ini":"2025-01-06","mes":"2025-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":3,"periodo":"13/01/25 a 18/01/25","ini":"2025-01-13","mes":"2025-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":4,"periodo":"20/01/25 a 25/01/25","ini":"2025-01-20","mes":"2025-01-01","concr":2.0,"sabado":"SIM","feriados":0.0,"area":1035.4,"vol":106.5,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":103.54,"pm2dia":18.8255,"pm2h":2.1393,"pm3dia":1.9364,"pm3h":0.22,"esp":0.1029,"rup":0.4675,"obs":"","detalhe":[{"data":"2025-01-20","torre":"Torre 02","pavto":"1° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-01-24","torre":"Torre 02","pavto":"Térreo","trecho":"2","area":455.44,"vol":46.5}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":5,"periodo":"27/01/25 a 01/02/25","ini":"2025-01-27","mes":"2025-01-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":455.44,"vol":46.5,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":45.544,"pm2dia":8.2807,"pm2h":0.941,"pm3dia":0.8455,"pm3h":0.0961,"esp":0.1021,"rup":1.0627,"obs":"","detalhe":[{"data":"2025-01-29","torre":"Torre 02","pavto":"1° pavto.","trecho":"2","area":455.44,"vol":46.5}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":6,"periodo":"03/02/25 a 08/02/25","ini":"2025-02-03","mes":"2025-02-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":699.42,"vol":52.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":46.628,"pm2dia":8.4778,"pm2h":0.9634,"pm3dia":0.6303,"pm3h":0.0716,"esp":0.0743,"rup":1.038,"obs":"","detalhe":[{"data":"2025-02-07","torre":"Torre 02","pavto":"1° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":7,"periodo":"10/02/25 a 15/02/25","ini":"2025-02-10","mes":"2025-02-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2326.04,"vol":205.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":155.0693,"pm2dia":28.1944,"pm2h":3.2039,"pm3dia":2.4909,"pm3h":0.2831,"esp":0.0883,"rup":0.3121,"obs":"","detalhe":[{"data":"2025-02-11","torre":"Torre 02","pavto":"1° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-02-12","torre":"Torre 02","pavto":"2° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-02-14","torre":"Torre 02","pavto":"2° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-02-15","torre":"Torre 02","pavto":"2° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":8,"periodo":"17/02/25 a 22/02/25","ini":"2025-02-17","mes":"2025-02-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2326.04,"vol":205.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":155.0693,"pm2dia":28.1944,"pm2h":3.2039,"pm3dia":2.4909,"pm3h":0.2831,"esp":0.0883,"rup":0.3121,"obs":"","detalhe":[{"data":"2025-02-18","torre":"Torre 02","pavto":"2° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-02-20","torre":"Torre 02","pavto":"3° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-02-21","torre":"Torre 02","pavto":"3° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-02-22","torre":"Torre 02","pavto":"3° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":9,"periodo":"24/02/25 a 01/03/25","ini":"2025-02-24","mes":"2025-02-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2326.04,"vol":205.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":155.0693,"pm2dia":28.1944,"pm2h":3.2039,"pm3dia":2.4909,"pm3h":0.2831,"esp":0.0883,"rup":0.3121,"obs":"","detalhe":[{"data":"2025-02-24","torre":"Torre 02","pavto":"3° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-02-25","torre":"Torre 02","pavto":"4° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-02-28","torre":"Torre 02","pavto":"4° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-03-01","torre":"Torre 02","pavto":"4° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":10,"periodo":"03/03/25 a 08/03/25","ini":"2025-03-03","mes":"2025-03-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2917.26,"vol":252.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":194.484,"pm2dia":35.3607,"pm2h":4.0183,"pm3dia":3.0606,"pm3h":0.3478,"esp":0.0866,"rup":0.2489,"obs":"","detalhe":[{"data":"2025-03-03","torre":"Torre 02","pavto":"4° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-03-05","torre":"Torre 02","pavto":"5° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-03-06","torre":"Torre 02","pavto":"5° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-03-07","torre":"Torre 02","pavto":"5° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-03-08","torre":"Torre 02","pavto":"5° pavto.","trecho":"4","area":591.22,"vol":47.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":11,"periodo":"10/03/25 a 15/03/25","ini":"2025-03-10","mes":"2025-03-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2906.0,"vol":265.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":193.7333,"pm2dia":35.2242,"pm2h":4.0028,"pm3dia":3.2182,"pm3h":0.3657,"esp":0.0914,"rup":0.2498,"obs":"","detalhe":[{"data":"2025-03-10","torre":"Torre 02","pavto":"6° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-03-12","torre":"Torre 02","pavto":"6° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-03-13","torre":"Torre 02","pavto":"6° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-03-14","torre":"Torre 02","pavto":"6° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-03-15","torre":"Torre 02","pavto":"7° pavto.","trecho":"1","area":579.96,"vol":60.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":12,"periodo":"17/03/25 a 22/03/25","ini":"2025-03-17","mes":"2025-03-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2781.48,"vol":252.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":185.432,"pm2dia":33.7149,"pm2h":3.8312,"pm3dia":3.0545,"pm3h":0.3471,"esp":0.0906,"rup":0.261,"obs":"","detalhe":[{"data":"2025-03-18","torre":"Torre 02","pavto":"7° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-03-19","torre":"Torre 02","pavto":"7° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-03-20","torre":"Torre 02","pavto":"7° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-03-21","torre":"Torre 02","pavto":"8° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-03-22","torre":"Torre 02","pavto":"8° pavto.","trecho":"2","area":455.44,"vol":46.5}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":13,"periodo":"24/03/25 a 29/03/25","ini":"2025-03-24","mes":"2025-03-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":3025.46,"vol":257.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":201.6973,"pm2dia":36.6722,"pm2h":4.1673,"pm3dia":3.1212,"pm3h":0.3547,"esp":0.0851,"rup":0.24,"obs":"","detalhe":[{"data":"2025-03-24","torre":"Torre 02","pavto":"8° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-03-25","torre":"Torre 02","pavto":"8° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-03-27","torre":"Torre 02","pavto":"9° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-03-28","torre":"Torre 02","pavto":"9° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-03-29","torre":"Torre 02","pavto":"9° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":14,"periodo":"31/03/25 a 05/04/25","ini":"2025-03-31","mes":"2025-03-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":591.22,"vol":47.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":39.4147,"pm2dia":7.1663,"pm2h":0.8144,"pm3dia":0.5697,"pm3h":0.0647,"esp":0.0795,"rup":1.228,"obs":"","detalhe":[{"data":"2025-03-31","torre":"Torre 02","pavto":"9° pavto.","trecho":"4","area":591.22,"vol":47.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":15,"periodo":"07/04/25 a 12/04/25","ini":"2025-04-07","mes":"2025-04-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2906.0,"vol":265.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":193.7333,"pm2dia":35.2242,"pm2h":4.0028,"pm3dia":3.2182,"pm3h":0.3657,"esp":0.0914,"rup":0.2498,"obs":"","detalhe":[{"data":"2025-04-07","torre":"Torre 02","pavto":"10° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-04-08","torre":"Torre 02","pavto":"10° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-04-09","torre":"Torre 02","pavto":"10° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-04-10","torre":"Torre 02","pavto":"10° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-04-12","torre":"Torre 02","pavto":"11° pavto.","trecho":"1","area":579.96,"vol":60.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":16,"periodo":"14/04/25 a 19/04/25","ini":"2025-04-14","mes":"2025-04-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2326.04,"vol":205.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":155.0693,"pm2dia":28.1944,"pm2h":3.2039,"pm3dia":2.4909,"pm3h":0.2831,"esp":0.0883,"rup":0.3121,"obs":"","detalhe":[{"data":"2025-04-14","torre":"Torre 02","pavto":"11° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-04-15","torre":"Torre 02","pavto":"11° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-04-16","torre":"Torre 02","pavto":"11° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-04-17","torre":"Torre 02","pavto":"12° pavto.","trecho":"1","area":579.96,"vol":60.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":17,"periodo":"21/04/25 a 26/04/25","ini":"2025-04-21","mes":"2025-04-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1746.08,"vol":145.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":116.4053,"pm2dia":21.1646,"pm2h":2.4051,"pm3dia":1.7636,"pm3h":0.2004,"esp":0.0833,"rup":0.4158,"obs":"","detalhe":[{"data":"2025-04-23","torre":"Torre 02","pavto":"12° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-04-24","torre":"Torre 02","pavto":"12° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-04-26","torre":"Torre 02","pavto":"12° pavto.","trecho":"4","area":591.22,"vol":47.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":18,"periodo":"28/04/25 a 03/05/25","ini":"2025-04-28","mes":"2025-04-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1734.82,"vol":158.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":115.6547,"pm2dia":21.0281,"pm2h":2.3896,"pm3dia":1.9212,"pm3h":0.2183,"esp":0.0914,"rup":0.4185,"obs":"","detalhe":[{"data":"2025-04-28","torre":"Torre 02","pavto":"13° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-05-02","torre":"Torre 02","pavto":"13° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-05-03","torre":"Torre 02","pavto":"13° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":19,"periodo":"05/05/25 a 10/05/25","ini":"2025-05-05","mes":"2025-05-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1626.62,"vol":153.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":108.4413,"pm2dia":19.7166,"pm2h":2.2405,"pm3dia":1.8606,"pm3h":0.2114,"esp":0.0944,"rup":0.4463,"obs":"","detalhe":[{"data":"2025-05-06","torre":"Torre 02","pavto":"13° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-05-08","torre":"Torre 02","pavto":"14° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-05-09","torre":"Torre 02","pavto":"14° pavto.","trecho":"2","area":455.44,"vol":46.5}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":20,"periodo":"12/05/25 a 17/05/25","ini":"2025-05-12","mes":"2025-05-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":3025.46,"vol":257.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":201.6973,"pm2dia":36.6722,"pm2h":4.1673,"pm3dia":3.1212,"pm3h":0.3547,"esp":0.0851,"rup":0.24,"obs":"","detalhe":[{"data":"2025-05-12","torre":"Torre 02","pavto":"14° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-05-13","torre":"Torre 02","pavto":"14° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-05-15","torre":"Torre 02","pavto":"15° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-05-16","torre":"Torre 02","pavto":"15° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-05-17","torre":"Torre 02","pavto":"15° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":21,"periodo":"19/05/25 a 24/05/25","ini":"2025-05-19","mes":"2025-05-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2917.26,"vol":252.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":194.484,"pm2dia":35.3607,"pm2h":4.0183,"pm3dia":3.0606,"pm3h":0.3478,"esp":0.0866,"rup":0.2489,"obs":"","detalhe":[{"data":"2025-05-20","torre":"Torre 02","pavto":"15° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-05-21","torre":"Torre 02","pavto":"16° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-05-22","torre":"Torre 02","pavto":"16° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-05-23","torre":"Torre 02","pavto":"16° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-05-24","torre":"Torre 02","pavto":"16° pavto.","trecho":"4","area":591.22,"vol":47.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":22,"periodo":"26/05/25 a 31/05/25","ini":"2025-05-26","mes":"2025-05-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2326.04,"vol":205.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":155.0693,"pm2dia":28.1944,"pm2h":3.2039,"pm3dia":2.4909,"pm3h":0.2831,"esp":0.0883,"rup":0.3121,"obs":"","detalhe":[{"data":"2025-05-28","torre":"Torre 02","pavto":"17° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-05-29","torre":"Torre 02","pavto":"17° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-05-30","torre":"Torre 02","pavto":"17° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-05-31","torre":"Torre 02","pavto":"17° pavto.","trecho":"4","area":591.22,"vol":47.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":23,"periodo":"02/06/25 a 07/06/25","ini":"2025-06-02","mes":"2025-06-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":24,"periodo":"09/06/25 a 14/06/25","ini":"2025-06-09","mes":"2025-06-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":25,"periodo":"16/06/25 a 21/06/25","ini":"2025-06-16","mes":"2025-06-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":26,"periodo":"23/06/25 a 28/06/25","ini":"2025-06-23","mes":"2025-06-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":27,"periodo":"30/06/25 a 05/07/25","ini":"2025-06-30","mes":"2025-06-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":28,"periodo":"07/07/25 a 12/07/25","ini":"2025-07-07","mes":"2025-07-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":29,"periodo":"14/07/25 a 19/07/25","ini":"2025-07-14","mes":"2025-07-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":30,"periodo":"21/07/25 a 26/07/25","ini":"2025-07-21","mes":"2025-07-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":31,"periodo":"28/07/25 a 02/08/25","ini":"2025-07-28","mes":"2025-07-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":32,"periodo":"04/08/25 a 09/08/25","ini":"2025-08-04","mes":"2025-08-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":33,"periodo":"11/08/25 a 16/08/25","ini":"2025-08-11","mes":"2025-08-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":34,"periodo":"18/08/25 a 23/08/25","ini":"2025-08-18","mes":"2025-08-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":35,"periodo":"25/08/25 a 30/08/25","ini":"2025-08-25","mes":"2025-08-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":36,"periodo":"01/09/25 a 06/09/25","ini":"2025-09-01","mes":"2025-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":37,"periodo":"08/09/25 a 13/09/25","ini":"2025-09-08","mes":"2025-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":38,"periodo":"15/09/25 a 20/09/25","ini":"2025-09-15","mes":"2025-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":39,"periodo":"22/09/25 a 27/09/25","ini":"2025-09-22","mes":"2025-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":40,"periodo":"29/09/25 a 04/10/25","ini":"2025-09-29","mes":"2025-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":41,"periodo":"06/10/25 a 11/10/25","ini":"2025-10-06","mes":"2025-10-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":42,"periodo":"13/10/25 a 18/10/25","ini":"2025-10-13","mes":"2025-10-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":43,"periodo":"20/10/25 a 25/10/25","ini":"2025-10-20","mes":"2025-10-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":44,"periodo":"27/10/25 a 01/11/25","ini":"2025-10-27","mes":"2025-10-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":45,"periodo":"03/11/25 a 08/11/25","ini":"2025-11-03","mes":"2025-11-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":46,"periodo":"10/11/25 a 15/11/25","ini":"2025-11-10","mes":"2025-11-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":47,"periodo":"17/11/25 a 22/11/25","ini":"2025-11-17","mes":"2025-11-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":48,"periodo":"24/11/25 a 29/11/25","ini":"2025-11-24","mes":"2025-11-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":49,"periodo":"01/12/25 a 06/12/25","ini":"2025-12-01","mes":"2025-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":50,"periodo":"08/12/25 a 13/12/25","ini":"2025-12-08","mes":"2025-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":51,"periodo":"15/12/25 a 20/12/25","ini":"2025-12-15","mes":"2025-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":52,"periodo":"22/12/25 a 27/12/25","ini":"2025-12-22","mes":"2025-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":1,"periodo":"29/12/25 a 03/01/26","ini":"2025-12-29","mes":"2025-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2026,"sem":2,"periodo":"05/01/26 a 10/01/26","ini":"2026-01-05","mes":"2026-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2026,"sem":3,"periodo":"12/01/26 a 17/01/26","ini":"2026-01-12","mes":"2026-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2026,"sem":4,"periodo":"19/01/26 a 24/01/26","ini":"2026-01-19","mes":"2026-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2026,"sem":5,"periodo":"26/01/26 a 31/01/26","ini":"2026-01-26","mes":"2026-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2026,"sem":6,"periodo":"02/02/26 a 07/02/26","ini":"2026-02-02","mes":"2026-02-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2024,"sem":50,"periodo":"09/12/24 a 14/12/24","ini":"2024-12-09","mes":"2024-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2024,"sem":51,"periodo":"16/12/24 a 21/12/24","ini":"2024-12-16","mes":"2024-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2024,"sem":52,"periodo":"23/12/24 a 28/12/24","ini":"2024-12-23","mes":"2024-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2024,"sem":1,"periodo":"30/12/24 a 04/01/25","ini":"2024-12-30","mes":"2024-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":2,"periodo":"06/01/25 a 11/01/25","ini":"2025-01-06","mes":"2025-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":3,"periodo":"13/01/25 a 18/01/25","ini":"2025-01-13","mes":"2025-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":4,"periodo":"20/01/25 a 25/01/25","ini":"2025-01-20","mes":"2025-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":5,"periodo":"27/01/25 a 01/02/25","ini":"2025-01-27","mes":"2025-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":6,"periodo":"03/02/25 a 08/02/25","ini":"2025-02-03","mes":"2025-02-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":7,"periodo":"10/02/25 a 15/02/25","ini":"2025-02-10","mes":"2025-02-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":8,"periodo":"17/02/25 a 22/02/25","ini":"2025-02-17","mes":"2025-02-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":9,"periodo":"24/02/25 a 01/03/25","ini":"2025-02-24","mes":"2025-02-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":10,"periodo":"03/03/25 a 08/03/25","ini":"2025-03-03","mes":"2025-03-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":11,"periodo":"10/03/25 a 15/03/25","ini":"2025-03-10","mes":"2025-03-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":12,"periodo":"17/03/25 a 22/03/25","ini":"2025-03-17","mes":"2025-03-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":13,"periodo":"24/03/25 a 29/03/25","ini":"2025-03-24","mes":"2025-03-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":14,"periodo":"31/03/25 a 05/04/25","ini":"2025-03-31","mes":"2025-03-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":15,"periodo":"07/04/25 a 12/04/25","ini":"2025-04-07","mes":"2025-04-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":16,"periodo":"14/04/25 a 19/04/25","ini":"2025-04-14","mes":"2025-04-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":17,"periodo":"21/04/25 a 26/04/25","ini":"2025-04-21","mes":"2025-04-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":18,"periodo":"28/04/25 a 03/05/25","ini":"2025-04-28","mes":"2025-04-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":19,"periodo":"05/05/25 a 10/05/25","ini":"2025-05-05","mes":"2025-05-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":20,"periodo":"12/05/25 a 17/05/25","ini":"2025-05-12","mes":"2025-05-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":21,"periodo":"19/05/25 a 24/05/25","ini":"2025-05-19","mes":"2025-05-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":22,"periodo":"26/05/25 a 31/05/25","ini":"2025-05-26","mes":"2025-05-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":23,"periodo":"02/06/25 a 07/06/25","ini":"2025-06-02","mes":"2025-06-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":579.96,"vol":60.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":38.664,"pm2dia":7.0298,"pm2h":0.7988,"pm3dia":0.7273,"pm3h":0.0826,"esp":0.1035,"rup":1.2518,"obs":"","detalhe":[{"data":"2025-06-07","torre":"Torre 01","pavto":"Térreo","trecho":"1","area":579.96,"vol":60.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":24,"periodo":"09/06/25 a 14/06/25","ini":"2025-06-09","mes":"2025-06-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":699.42,"vol":52.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":46.628,"pm2dia":8.4778,"pm2h":0.9634,"pm3dia":0.6303,"pm3h":0.0716,"esp":0.0743,"rup":1.038,"obs":"","detalhe":[{"data":"2025-06-11","torre":"Torre 01","pavto":"Térreo","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":25,"periodo":"16/06/25 a 21/06/25","ini":"2025-06-16","mes":"2025-06-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":579.96,"vol":60.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":38.664,"pm2dia":7.0298,"pm2h":0.7988,"pm3dia":0.7273,"pm3h":0.0826,"esp":0.1035,"rup":1.2518,"obs":"","detalhe":[{"data":"2025-06-17","torre":"Torre 01","pavto":"1° pavto.","trecho":"1","area":579.96,"vol":60.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":26,"periodo":"23/06/25 a 28/06/25","ini":"2025-06-23","mes":"2025-06-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1746.08,"vol":145.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":116.4053,"pm2dia":21.1646,"pm2h":2.4051,"pm3dia":1.7636,"pm3h":0.2004,"esp":0.0833,"rup":0.4158,"obs":"","detalhe":[{"data":"2025-06-24","torre":"Torre 01","pavto":"1° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-06-26","torre":"Torre 01","pavto":"Térreo","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-06-28","torre":"Torre 01","pavto":"Térreo","trecho":"4","area":591.22,"vol":47.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":27,"periodo":"30/06/25 a 05/07/25","ini":"2025-06-30","mes":"2025-06-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2082.06,"vol":200.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":138.804,"pm2dia":25.2371,"pm2h":2.8679,"pm3dia":2.4242,"pm3h":0.2755,"esp":0.0961,"rup":0.3487,"obs":"","detalhe":[{"data":"2025-07-01","torre":"Torre 01","pavto":"1° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-07-03","torre":"Torre 01","pavto":"1° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-07-04","torre":"Torre 01","pavto":"2° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-07-05","torre":"Torre 01","pavto":"2° pavto.","trecho":"2","area":455.44,"vol":46.5}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":28,"periodo":"07/07/25 a 12/07/25","ini":"2025-07-07","mes":"2025-07-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":3025.46,"vol":257.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":201.6973,"pm2dia":36.6722,"pm2h":4.1673,"pm3dia":3.1212,"pm3h":0.3547,"esp":0.0851,"rup":0.24,"obs":"","detalhe":[{"data":"2025-07-07","torre":"Torre 01","pavto":"2° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-07-08","torre":"Torre 01","pavto":"2° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-07-10","torre":"Torre 01","pavto":"3° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-07-11","torre":"Torre 01","pavto":"3° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-07-12","torre":"Torre 01","pavto":"3° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":29,"periodo":"14/07/25 a 19/07/25","ini":"2025-07-14","mes":"2025-07-01","concr":6.0,"sabado":"SIM","feriados":0.0,"area":3497.22,"vol":312.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":233.148,"pm2dia":42.3905,"pm2h":4.8171,"pm3dia":3.7879,"pm3h":0.4304,"esp":0.0894,"rup":0.2076,"obs":"","detalhe":[{"data":"2025-07-14","torre":"Torre 01","pavto":"3° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-07-15","torre":"Torre 01","pavto":"4° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-07-16","torre":"Torre 01","pavto":"4° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-07-17","torre":"Torre 01","pavto":"4° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-07-18","torre":"Torre 01","pavto":"4° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-07-19","torre":"Torre 01","pavto":"5° pavto.","trecho":"1","area":579.96,"vol":60.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":30,"periodo":"21/07/25 a 26/07/25","ini":"2025-07-21","mes":"2025-07-01","concr":6.0,"sabado":"SIM","feriados":0.0,"area":3236.92,"vol":298.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":215.7947,"pm2dia":39.2354,"pm2h":4.4586,"pm3dia":3.6182,"pm3h":0.4112,"esp":0.0922,"rup":0.2243,"obs":"","detalhe":[{"data":"2025-07-21","torre":"Torre 01","pavto":"5° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-07-22","torre":"Torre 01","pavto":"5° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-07-23","torre":"Torre 01","pavto":"5° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-07-24","torre":"Torre 01","pavto":"6° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-07-25","torre":"Torre 01","pavto":"6° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-07-26","torre":"Torre 01","pavto":"6° pavto.","trecho":"2","area":455.44,"vol":46.5}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":31,"periodo":"28/07/25 a 02/08/25","ini":"2025-07-28","mes":"2025-07-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2917.26,"vol":252.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":194.484,"pm2dia":35.3607,"pm2h":4.0183,"pm3dia":3.0606,"pm3h":0.3478,"esp":0.0866,"rup":0.2489,"obs":"","detalhe":[{"data":"2025-07-29","torre":"Torre 01","pavto":"6° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-07-30","torre":"Torre 01","pavto":"7° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-07-31","torre":"Torre 01","pavto":"7° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-08-01","torre":"Torre 01","pavto":"7° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-08-02","torre":"Torre 01","pavto":"7° pavto.","trecho":"4","area":591.22,"vol":47.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":32,"periodo":"04/08/25 a 09/08/25","ini":"2025-08-04","mes":"2025-08-01","concr":6.0,"sabado":"SIM","feriados":0.0,"area":3361.44,"vol":312.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":224.096,"pm2dia":40.7447,"pm2h":4.6301,"pm3dia":3.7818,"pm3h":0.4298,"esp":0.0928,"rup":0.216,"obs":"","detalhe":[{"data":"2025-08-04","torre":"Torre 01","pavto":"8° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-08-05","torre":"Torre 01","pavto":"8° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-08-06","torre":"Torre 01","pavto":"8° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-08-07","torre":"Torre 01","pavto":"8° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-08-08","torre":"Torre 01","pavto":"9° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-08-09","torre":"Torre 01","pavto":"9° pavto.","trecho":"2","area":455.44,"vol":46.5}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":33,"periodo":"11/08/25 a 16/08/25","ini":"2025-08-11","mes":"2025-08-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":3025.46,"vol":257.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":201.6973,"pm2dia":36.6722,"pm2h":4.1673,"pm3dia":3.1212,"pm3h":0.3547,"esp":0.0851,"rup":0.24,"obs":"","detalhe":[{"data":"2025-08-12","torre":"Torre 01","pavto":"9° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-08-13","torre":"Torre 01","pavto":"9° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-08-14","torre":"Torre 01","pavto":"10° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-08-15","torre":"Torre 01","pavto":"10° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-08-16","torre":"Torre 01","pavto":"10° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":34,"periodo":"18/08/25 a 23/08/25","ini":"2025-08-18","mes":"2025-08-01","concr":6.0,"sabado":"SIM","feriados":0.0,"area":3497.22,"vol":312.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":233.148,"pm2dia":42.3905,"pm2h":4.8171,"pm3dia":3.7879,"pm3h":0.4304,"esp":0.0894,"rup":0.2076,"obs":"","detalhe":[{"data":"2025-08-18","torre":"Torre 01","pavto":"10° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-08-19","torre":"Torre 01","pavto":"11° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-08-20","torre":"Torre 01","pavto":"11° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-08-21","torre":"Torre 01","pavto":"11° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-08-22","torre":"Torre 01","pavto":"11° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-08-23","torre":"Torre 01","pavto":"12° pavto.","trecho":"1","area":579.96,"vol":60.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":35,"periodo":"25/08/25 a 30/08/25","ini":"2025-08-25","mes":"2025-08-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2645.7,"vol":251.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":176.38,"pm2dia":32.0691,"pm2h":3.6442,"pm3dia":3.0485,"pm3h":0.3464,"esp":0.0951,"rup":0.2744,"obs":"","detalhe":[{"data":"2025-08-26","torre":"Torre 01","pavto":"12° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-08-27","torre":"Torre 01","pavto":"12° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-08-28","torre":"Torre 01","pavto":"12° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-08-29","torre":"Torre 01","pavto":"13° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-08-30","torre":"Torre 01","pavto":"13° pavto.","trecho":"2","area":455.44,"vol":46.5}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":36,"periodo":"01/09/25 a 06/09/25","ini":"2025-09-01","mes":"2025-09-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":3025.46,"vol":257.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":201.6973,"pm2dia":36.6722,"pm2h":4.1673,"pm3dia":3.1212,"pm3h":0.3547,"esp":0.0851,"rup":0.24,"obs":"","detalhe":[{"data":"2025-09-01","torre":"Torre 01","pavto":"13° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-09-02","torre":"Torre 01","pavto":"13° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-09-03","torre":"Torre 01","pavto":"14° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-09-05","torre":"Torre 01","pavto":"14° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-09-06","torre":"Torre 01","pavto":"14° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":37,"periodo":"08/09/25 a 13/09/25","ini":"2025-09-08","mes":"2025-09-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2917.26,"vol":252.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":194.484,"pm2dia":35.3607,"pm2h":4.0183,"pm3dia":3.0606,"pm3h":0.3478,"esp":0.0866,"rup":0.2489,"obs":"","detalhe":[{"data":"2025-09-09","torre":"Torre 01","pavto":"14° pavto.","trecho":"4","area":591.22,"vol":47.0},{"data":"2025-09-10","torre":"Torre 01","pavto":"15° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-09-11","torre":"Torre 01","pavto":"15° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-09-12","torre":"Torre 01","pavto":"15° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-09-13","torre":"Torre 01","pavto":"15° pavto.","trecho":"4","area":591.22,"vol":47.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":38,"periodo":"15/09/25 a 20/09/25","ini":"2025-09-15","mes":"2025-09-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2326.04,"vol":205.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":155.0693,"pm2dia":28.1944,"pm2h":3.2039,"pm3dia":2.4909,"pm3h":0.2831,"esp":0.0883,"rup":0.3121,"obs":"","detalhe":[{"data":"2025-09-16","torre":"Torre 01","pavto":"16° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-09-17","torre":"Torre 01","pavto":"16° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-09-18","torre":"Torre 01","pavto":"16° pavto.","trecho":"3","area":699.42,"vol":52.0},{"data":"2025-09-19","torre":"Torre 01","pavto":"16° pavto.","trecho":"4","area":591.22,"vol":47.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":39,"periodo":"22/09/25 a 27/09/25","ini":"2025-09-22","mes":"2025-09-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1734.82,"vol":158.5,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":115.6547,"pm2dia":21.0281,"pm2h":2.3896,"pm3dia":1.9212,"pm3h":0.2183,"esp":0.0914,"rup":0.4185,"obs":"","detalhe":[{"data":"2025-09-23","torre":"Torre 01","pavto":"17° pavto.","trecho":"1","area":579.96,"vol":60.0},{"data":"2025-09-25","torre":"Torre 01","pavto":"17° pavto.","trecho":"2","area":455.44,"vol":46.5},{"data":"2025-09-27","torre":"Torre 01","pavto":"17° pavto.","trecho":"3","area":699.42,"vol":52.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":40,"periodo":"29/09/25 a 04/10/25","ini":"2025-09-29","mes":"2025-09-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":591.22,"vol":47.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":39.4147,"pm2dia":7.1663,"pm2h":0.8144,"pm3dia":0.5697,"pm3h":0.0647,"esp":0.0795,"rup":1.228,"obs":"","detalhe":[{"data":"2025-09-30","torre":"Torre 01","pavto":"17° pavto.","trecho":"4","area":591.22,"vol":47.0}]},{"obra":"Altus Vila Prudente","ano":2025,"sem":41,"periodo":"06/10/25 a 11/10/25","ini":"2025-10-06","mes":"2025-10-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":42,"periodo":"13/10/25 a 18/10/25","ini":"2025-10-13","mes":"2025-10-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":43,"periodo":"20/10/25 a 25/10/25","ini":"2025-10-20","mes":"2025-10-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":44,"periodo":"27/10/25 a 01/11/25","ini":"2025-10-27","mes":"2025-10-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":45,"periodo":"03/11/25 a 08/11/25","ini":"2025-11-03","mes":"2025-11-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":46,"periodo":"10/11/25 a 15/11/25","ini":"2025-11-10","mes":"2025-11-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":47,"periodo":"17/11/25 a 22/11/25","ini":"2025-11-17","mes":"2025-11-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":48,"periodo":"24/11/25 a 29/11/25","ini":"2025-11-24","mes":"2025-11-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":49,"periodo":"01/12/25 a 06/12/25","ini":"2025-12-01","mes":"2025-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":50,"periodo":"08/12/25 a 13/12/25","ini":"2025-12-08","mes":"2025-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":51,"periodo":"15/12/25 a 20/12/25","ini":"2025-12-15","mes":"2025-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":52,"periodo":"22/12/25 a 27/12/25","ini":"2025-12-22","mes":"2025-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2025,"sem":1,"periodo":"29/12/25 a 03/01/26","ini":"2025-12-29","mes":"2025-12-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2026,"sem":2,"periodo":"05/01/26 a 10/01/26","ini":"2026-01-05","mes":"2026-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2026,"sem":3,"periodo":"12/01/26 a 17/01/26","ini":"2026-01-12","mes":"2026-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2026,"sem":4,"periodo":"19/01/26 a 24/01/26","ini":"2026-01-19","mes":"2026-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2026,"sem":5,"periodo":"26/01/26 a 31/01/26","ini":"2026-01-26","mes":"2026-01-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Altus Vila Prudente","ano":2026,"sem":6,"periodo":"02/02/26 a 07/02/26","ini":"2026-02-02","mes":"2026-02-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"","detalhe":[]},{"obra":"Serena","ano":2025,"sem":1,"periodo":"29/12/25 a 03/01/26","ini":"2025-12-29","mes":"2025-12-01","concr":0.0,"sabado":"0","feriados":1.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Serena","ano":2026,"sem":2,"periodo":"05/01/26 a 10/01/26","ini":"2026-01-05","mes":"2026-01-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Serena","ano":2026,"sem":3,"periodo":"12/01/26 a 17/01/26","ini":"2026-01-12","mes":"2026-01-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":692.53,"vol":61.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":43.2831,"pm2dia":7.8697,"pm2h":0.8943,"pm3dia":0.6932,"pm3h":0.0788,"esp":0.0881,"rup":1.1182,"obs":"nan","detalhe":[{"data":"2026-01-15","torre":"Torre 01","pavto":"1° pavto.","trecho":"1","area":692.53,"vol":61.0}]},{"obra":"Serena","ano":2026,"sem":4,"periodo":"19/01/26 a 24/01/26","ini":"2026-01-19","mes":"2026-01-01","concr":2.0,"sabado":"SIM","feriados":1.0,"area":1119.59,"vol":106.0,"mont":16.0,"dias":4.5,"horas":39.6,"pm2sem":69.9744,"pm2dia":19.9927,"pm2h":2.2719,"pm3dia":1.8929,"pm3h":0.2151,"esp":0.0947,"rup":0.4402,"obs":"nan","detalhe":[{"data":"2026-01-20","torre":"Torre 01","pavto":"1° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-01-24","torre":"Torre 01","pavto":"1° pavto.","trecho":"2","area":624.93,"vol":58.0}]},{"obra":"Serena","ano":2026,"sem":5,"periodo":"26/01/26 a 31/01/26","ini":"2026-01-26","mes":"2026-01-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":542.94,"vol":49.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":33.9338,"pm2dia":6.1698,"pm2h":0.7011,"pm3dia":0.5568,"pm3h":0.0633,"esp":0.0902,"rup":1.4263,"obs":"nan","detalhe":[{"data":"2026-01-28","torre":"Torre 01","pavto":"1° pavto.","trecho":"2A","area":542.94,"vol":49.0}]},{"obra":"Serena","ano":2026,"sem":6,"periodo":"02/02/26 a 07/02/26","ini":"2026-02-02","mes":"2026-02-01","concr":2.0,"sabado":"SIM","feriados":0.0,"area":1187.19,"vol":109.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":74.1994,"pm2dia":13.4908,"pm2h":1.533,"pm3dia":1.2386,"pm3h":0.1408,"esp":0.0918,"rup":0.6523,"obs":"nan","detalhe":[{"data":"2026-02-02","torre":"Torre 01","pavto":"2° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-02-05","torre":"Torre 01","pavto":"2° pavto.","trecho":"1A","area":494.66,"vol":48.0}]},{"obra":"Serena","ano":2026,"sem":7,"periodo":"09/02/26 a 14/02/26","ini":"2026-02-09","mes":"2026-02-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Serena","ano":2026,"sem":8,"periodo":"16/02/26 a 21/02/26","ini":"2026-02-16","mes":"2026-02-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":624.93,"vol":58.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":39.0581,"pm2dia":7.1015,"pm2h":0.807,"pm3dia":0.6591,"pm3h":0.0749,"esp":0.0928,"rup":1.2392,"obs":"nan","detalhe":[{"data":"2026-02-18","torre":"Torre 01","pavto":"2° pavto.","trecho":"2","area":624.93,"vol":58.0}]},{"obra":"Serena","ano":2026,"sem":9,"periodo":"23/02/26 a 28/02/26","ini":"2026-02-23","mes":"2026-02-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1730.13,"vol":158.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":108.1331,"pm2dia":19.6606,"pm2h":2.2342,"pm3dia":1.7955,"pm3h":0.204,"esp":0.0913,"rup":0.4476,"obs":"nan","detalhe":[{"data":"2026-02-23","torre":"Torre 01","pavto":"2° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-02-26","torre":"Torre 01","pavto":"3° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-02-28","torre":"Torre 01","pavto":"3° pavto.","trecho":"1A","area":494.66,"vol":48.0}]},{"obra":"Serena","ano":2026,"sem":10,"periodo":"02/03/26 a 07/03/26","ini":"2026-03-02","mes":"2026-03-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1860.4,"vol":168.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":116.275,"pm2dia":21.1409,"pm2h":2.4024,"pm3dia":1.9091,"pm3h":0.2169,"esp":0.0903,"rup":0.4163,"obs":"nan","detalhe":[{"data":"2026-03-03","torre":"Torre 01","pavto":"3° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-03-04","torre":"Torre 01","pavto":"3° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-03-06","torre":"Torre 01","pavto":"4° pavto.","trecho":"1","area":692.53,"vol":61.0}]},{"obra":"Serena","ano":2026,"sem":11,"periodo":"09/03/26 a 14/03/26","ini":"2026-03-09","mes":"2026-03-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":147.1912,"pm2dia":26.762,"pm2h":3.0411,"pm3dia":2.4545,"pm3h":0.2789,"esp":0.0917,"rup":0.3288,"obs":"nan","detalhe":[{"data":"2026-03-09","torre":"Torre 01","pavto":"4° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-03-11","torre":"Torre 01","pavto":"4° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-03-12","torre":"Torre 01","pavto":"4° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-03-14","torre":"Torre 01","pavto":"5° pavto.","trecho":"1","area":692.53,"vol":61.0}]},{"obra":"Serena","ano":2026,"sem":12,"periodo":"16/03/26 a 21/03/26","ini":"2026-03-16","mes":"2026-03-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2849.72,"vol":264.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":178.1075,"pm2dia":32.3832,"pm2h":3.6799,"pm3dia":3.0,"pm3h":0.3409,"esp":0.0926,"rup":0.2717,"obs":"nan","detalhe":[{"data":"2026-03-16","torre":"Torre 01","pavto":"5° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-03-17","torre":"Torre 01","pavto":"5° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-03-18","torre":"Torre 01","pavto":"5° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-03-20","torre":"Torre 01","pavto":"6° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-03-21","torre":"Torre 01","pavto":"6° pavto.","trecho":"1A","area":494.66,"vol":48.0}]},{"obra":"Serena","ano":2026,"sem":13,"periodo":"23/03/26 a 28/03/26","ini":"2026-03-23","mes":"2026-03-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":147.1912,"pm2dia":26.762,"pm2h":3.0411,"pm3dia":2.4545,"pm3h":0.2789,"esp":0.0917,"rup":0.3288,"obs":"nan","detalhe":[{"data":"2026-03-24","torre":"Torre 01","pavto":"6° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-03-25","torre":"Torre 01","pavto":"6° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-03-27","torre":"Torre 01","pavto":"7° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-03-28","torre":"Torre 01","pavto":"7° pavto.","trecho":"1A","area":494.66,"vol":48.0}]},{"obra":"Serena","ano":2026,"sem":14,"periodo":"30/03/26 a 04/04/26","ini":"2026-03-30","mes":"2026-03-01","concr":2.0,"sabado":"SIM","feriados":1.0,"area":1167.87,"vol":107.0,"mont":16.0,"dias":4.5,"horas":39.6,"pm2sem":72.9919,"pm2dia":20.8548,"pm2h":2.3699,"pm3dia":1.9107,"pm3h":0.2171,"esp":0.0916,"rup":0.422,"obs":"nan","detalhe":[{"data":"2026-03-31","torre":"Torre 01","pavto":"7° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-04-01","torre":"Torre 01","pavto":"7° pavto.","trecho":"2A","area":542.94,"vol":49.0}]},{"obra":"Serena","ano":2026,"sem":15,"periodo":"06/04/26 a 11/04/26","ini":"2026-04-06","mes":"2026-04-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":147.1912,"pm2dia":26.762,"pm2h":3.0411,"pm3dia":2.4545,"pm3h":0.2789,"esp":0.0917,"rup":0.3288,"obs":"nan","detalhe":[{"data":"2026-04-07","torre":"Torre 01","pavto":"8° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-04-08","torre":"Torre 01","pavto":"8° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-04-09","torre":"Torre 01","pavto":"8° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-04-10","torre":"Torre 01","pavto":"8° pavto.","trecho":"2A","area":542.94,"vol":49.0}]},{"obra":"Serena","ano":2026,"sem":16,"periodo":"13/04/26 a 18/04/26","ini":"2026-04-13","mes":"2026-04-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":147.1912,"pm2dia":26.762,"pm2h":3.0411,"pm3dia":2.4545,"pm3h":0.2789,"esp":0.0917,"rup":0.3288,"obs":"nan","detalhe":[{"data":"2026-04-13","torre":"Torre 01","pavto":"9° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-04-14","torre":"Torre 01","pavto":"9° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-04-16","torre":"Torre 01","pavto":"9° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-04-18","torre":"Torre 01","pavto":"9° pavto.","trecho":"2A","area":542.94,"vol":49.0}]},{"obra":"Serena","ano":2026,"sem":17,"periodo":"20/04/26 a 25/04/26","ini":"2026-04-20","mes":"2026-04-01","concr":4.0,"sabado":"SIM","feriados":1.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":4.5,"horas":39.6,"pm2sem":147.1912,"pm2dia":42.0546,"pm2h":4.7789,"pm3dia":3.8571,"pm3h":0.4383,"esp":0.0917,"rup":0.2093,"obs":"nan","detalhe":[{"data":"2026-04-20","torre":"Torre 01","pavto":"10° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-04-22","torre":"Torre 01","pavto":"10° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-04-24","torre":"Torre 01","pavto":"10° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-04-25","torre":"Torre 01","pavto":"10° pavto.","trecho":"2A","area":542.94,"vol":49.0}]},{"obra":"Serena","ano":2026,"sem":18,"periodo":"27/04/26 a 02/05/26","ini":"2026-04-27","mes":"2026-04-01","concr":4.0,"sabado":"SIM","feriados":1.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":4.5,"horas":39.6,"pm2sem":147.1912,"pm2dia":42.0546,"pm2h":4.7789,"pm3dia":3.8571,"pm3h":0.4383,"esp":0.0917,"rup":0.2093,"obs":"nan","detalhe":[{"data":"2026-04-28","torre":"Torre 01","pavto":"11° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-04-29","torre":"Torre 01","pavto":"11° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-04-30","torre":"Torre 01","pavto":"11° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-05-02","torre":"Torre 01","pavto":"11° pavto.","trecho":"2A","area":542.94,"vol":49.0}]},{"obra":"Serena","ano":2026,"sem":19,"periodo":"04/05/26 a 09/05/26","ini":"2026-05-04","mes":"2026-05-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":147.1912,"pm2dia":26.762,"pm2h":3.0411,"pm3dia":2.4545,"pm3h":0.2789,"esp":0.0917,"rup":0.3288,"obs":"nan","detalhe":[{"data":"2026-05-05","torre":"Torre 01","pavto":"12° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-05-06","torre":"Torre 01","pavto":"12° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-05-07","torre":"Torre 01","pavto":"12° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-05-08","torre":"Torre 01","pavto":"12° pavto.","trecho":"2A","area":542.94,"vol":49.0}]},{"obra":"Serena","ano":2026,"sem":20,"periodo":"11/05/26 a 16/05/26","ini":"2026-05-11","mes":"2026-05-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":147.1912,"pm2dia":26.762,"pm2h":3.0411,"pm3dia":2.4545,"pm3h":0.2789,"esp":0.0917,"rup":0.3288,"obs":"nan","detalhe":[{"data":"2026-05-11","torre":"Torre 01","pavto":"13° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-05-12","torre":"Torre 01","pavto":"13° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-05-14","torre":"Torre 01","pavto":"13° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-05-15","torre":"Torre 01","pavto":"13° pavto.","trecho":"2A","area":542.94,"vol":49.0}]},{"obra":"Serena","ano":2026,"sem":21,"periodo":"18/05/26 a 23/05/26","ini":"2026-05-18","mes":"2026-05-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":147.1912,"pm2dia":26.762,"pm2h":3.0411,"pm3dia":2.4545,"pm3h":0.2789,"esp":0.0917,"rup":0.3288,"obs":"nan","detalhe":[{"data":"2026-05-18","torre":"Torre 01","pavto":"14° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-05-20","torre":"Torre 01","pavto":"14° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-05-22","torre":"Torre 01","pavto":"14° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-05-23","torre":"Torre 01","pavto":"14° pavto.","trecho":"2A","area":542.94,"vol":49.0}]},{"obra":"Serena","ano":2026,"sem":22,"periodo":"25/05/26 a 30/05/26","ini":"2026-05-25","mes":"2026-05-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1812.12,"vol":167.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":113.2575,"pm2dia":20.5923,"pm2h":2.34,"pm3dia":1.8977,"pm3h":0.2157,"esp":0.0922,"rup":0.4273,"obs":"nan","detalhe":[{"data":"2026-05-26","torre":"Torre 01","pavto":"15° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-05-27","torre":"Torre 01","pavto":"15° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-05-29","torre":"Torre 01","pavto":"15° pavto.","trecho":"2","area":624.93,"vol":58.0}]},{"obra":"Serena","ano":2026,"sem":23,"periodo":"01/06/26 a 06/06/26","ini":"2026-06-01","mes":"2026-06-01","concr":4.0,"sabado":"SIM","feriados":1.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":4.5,"horas":39.6,"pm2sem":147.1912,"pm2dia":42.0546,"pm2h":4.7789,"pm3dia":3.8571,"pm3h":0.4383,"esp":0.0917,"rup":0.2093,"obs":"nan","detalhe":[{"data":"2026-06-01","torre":"Torre 01","pavto":"15° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-06-03","torre":"Torre 01","pavto":"16° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-06-05","torre":"Torre 01","pavto":"16° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-06-06","torre":"Torre 01","pavto":"16° pavto.","trecho":"2","area":624.93,"vol":58.0}]},{"obra":"Serena","ano":2026,"sem":24,"periodo":"08/06/26 a 13/06/26","ini":"2026-06-08","mes":"2026-06-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1730.13,"vol":158.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":108.1331,"pm2dia":19.6606,"pm2h":2.2342,"pm3dia":1.7955,"pm3h":0.204,"esp":0.0913,"rup":0.4476,"obs":"nan","detalhe":[{"data":"2026-06-08","torre":"Torre 01","pavto":"16° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-06-10","torre":"Torre 01","pavto":"17° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-06-11","torre":"Torre 01","pavto":"17° pavto.","trecho":"1A","area":494.66,"vol":48.0}]},{"obra":"Serena","ano":2026,"sem":25,"periodo":"15/06/26 a 20/06/26","ini":"2026-06-15","mes":"2026-06-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1860.4,"vol":168.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":116.275,"pm2dia":21.1409,"pm2h":2.4024,"pm3dia":1.9091,"pm3h":0.2169,"esp":0.0903,"rup":0.4163,"obs":"nan","detalhe":[{"data":"2026-06-17","torre":"Torre 01","pavto":"17° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-06-18","torre":"Torre 01","pavto":"17° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-06-20","torre":"Torre 01","pavto":"18° pavto.","trecho":"1","area":692.53,"vol":61.0}]},{"obra":"Serena","ano":2026,"sem":26,"periodo":"22/06/26 a 27/06/26","ini":"2026-06-22","mes":"2026-06-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":147.1912,"pm2dia":26.762,"pm2h":3.0411,"pm3dia":2.4545,"pm3h":0.2789,"esp":0.0917,"rup":0.3288,"obs":"nan","detalhe":[{"data":"2026-06-22","torre":"Torre 01","pavto":"18° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-06-24","torre":"Torre 01","pavto":"18° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-06-25","torre":"Torre 01","pavto":"18° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-06-27","torre":"Torre 01","pavto":"19° pavto.","trecho":"1","area":692.53,"vol":61.0}]},{"obra":"Serena","ano":2026,"sem":27,"periodo":"29/06/26 a 04/07/26","ini":"2026-06-29","mes":"2026-06-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":147.1912,"pm2dia":26.762,"pm2h":3.0411,"pm3dia":2.4545,"pm3h":0.2789,"esp":0.0917,"rup":0.3288,"obs":"nan","detalhe":[{"data":"2026-06-29","torre":"Torre 01","pavto":"19° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-07-01","torre":"Torre 01","pavto":"19° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-07-02","torre":"Torre 01","pavto":"19° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-07-03","torre":"Torre 01","pavto":"20° pavto.","trecho":"1","area":692.53,"vol":61.0}]},{"obra":"Serena","ano":2026,"sem":28,"periodo":"06/07/26 a 11/07/26","ini":"2026-07-06","mes":"2026-07-01","concr":4.0,"sabado":"SIM","feriados":1.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":4.5,"horas":39.6,"pm2sem":147.1912,"pm2dia":42.0546,"pm2h":4.7789,"pm3dia":3.8571,"pm3h":0.4383,"esp":0.0917,"rup":0.2093,"obs":"nan","detalhe":[{"data":"2026-07-06","torre":"Torre 01","pavto":"20° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-07-07","torre":"Torre 01","pavto":"20° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-07-08","torre":"Torre 01","pavto":"20° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-07-10","torre":"Torre 01","pavto":"21° pavto.","trecho":"1","area":692.53,"vol":61.0}]},{"obra":"Serena","ano":2026,"sem":29,"periodo":"13/07/26 a 18/07/26","ini":"2026-07-13","mes":"2026-07-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2849.72,"vol":264.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":178.1075,"pm2dia":32.3832,"pm2h":3.6799,"pm3dia":3.0,"pm3h":0.3409,"esp":0.0926,"rup":0.2717,"obs":"nan","detalhe":[{"data":"2026-07-13","torre":"Torre 01","pavto":"21° pavto.","trecho":"1A","area":494.66,"vol":48.0},{"data":"2026-07-14","torre":"Torre 01","pavto":"21° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-07-15","torre":"Torre 01","pavto":"21° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-07-16","torre":"Torre 01","pavto":"22° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-07-17","torre":"Torre 01","pavto":"22° pavto.","trecho":"1A","area":494.66,"vol":48.0}]},{"obra":"Serena","ano":2026,"sem":30,"periodo":"20/07/26 a 25/07/26","ini":"2026-07-20","mes":"2026-07-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":2355.06,"vol":216.0,"mont":16.0,"dias":5.5,"horas":48.4,"pm2sem":147.1912,"pm2dia":26.762,"pm2h":3.0411,"pm3dia":2.4545,"pm3h":0.2789,"esp":0.0917,"rup":0.3288,"obs":"nan","detalhe":[{"data":"2026-07-20","torre":"Torre 01","pavto":"22° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-07-21","torre":"Torre 01","pavto":"22° pavto.","trecho":"2A","area":542.94,"vol":49.0},{"data":"2026-07-23","torre":"Torre 01","pavto":"23° pavto.","trecho":"1","area":692.53,"vol":61.0},{"data":"2026-07-25","torre":"Torre 01","pavto":"23° pavto.","trecho":"1A","area":494.66,"vol":48.0}]},{"obra":"Serena","ano":2026,"sem":31,"periodo":"27/07/26 a 01/08/26","ini":"2026-07-27","mes":"2026-07-01","concr":2.0,"sabado":"SIM","feriados":0.0,"area":1167.87,"vol":107.0,"mont":16.0,"dias":3.0,"horas":26.4,"pm2sem":72.9919,"pm2dia":24.3306,"pm2h":2.7648,"pm3dia":2.2292,"pm3h":0.2533,"esp":0.0916,"rup":0.3617,"obs":"Concretagens finais aptos. (início seg e fim quarta f.)","detalhe":[{"data":"2026-07-28","torre":"Torre 01","pavto":"23° pavto.","trecho":"2","area":624.93,"vol":58.0},{"data":"2026-07-29","torre":"Torre 01","pavto":"23° pavto.","trecho":"2A","area":542.94,"vol":49.0}]},{"obra":"Serena","ano":2026,"sem":32,"periodo":"03/08/26 a 08/08/26","ini":"2026-08-03","mes":"2026-08-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"Fim concretagem aptos. (concretagem platibandas)","detalhe":[]},{"obra":"Serena","ano":2026,"sem":33,"periodo":"10/08/26 a 15/08/26","ini":"2026-08-10","mes":"2026-08-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Serena","ano":2026,"sem":34,"periodo":"17/08/26 a 22/08/26","ini":"2026-08-17","mes":"2026-08-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Serena","ano":2026,"sem":35,"periodo":"24/08/26 a 29/08/26","ini":"2026-08-24","mes":"2026-08-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2025,"sem":1,"periodo":"29/12/25 a 03/01/26","ini":"2025-12-29","mes":"2025-12-01","concr":0.0,"sabado":"0","feriados":1.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":2,"periodo":"05/01/26 a 10/01/26","ini":"2026-01-05","mes":"2026-01-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":3,"periodo":"12/01/26 a 17/01/26","ini":"2026-01-12","mes":"2026-01-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":4,"periodo":"19/01/26 a 24/01/26","ini":"2026-01-19","mes":"2026-01-01","concr":0.0,"sabado":"0","feriados":1.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":5,"periodo":"26/01/26 a 31/01/26","ini":"2026-01-26","mes":"2026-01-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":6,"periodo":"02/02/26 a 07/02/26","ini":"2026-02-02","mes":"2026-02-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":7,"periodo":"09/02/26 a 14/02/26","ini":"2026-02-09","mes":"2026-02-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":8,"periodo":"16/02/26 a 21/02/26","ini":"2026-02-16","mes":"2026-02-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":9,"periodo":"23/02/26 a 28/02/26","ini":"2026-02-23","mes":"2026-02-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":10,"periodo":"02/03/26 a 07/03/26","ini":"2026-03-02","mes":"2026-03-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":11,"periodo":"09/03/26 a 14/03/26","ini":"2026-03-09","mes":"2026-03-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":12,"periodo":"16/03/26 a 21/03/26","ini":"2026-03-16","mes":"2026-03-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":13,"periodo":"23/03/26 a 28/03/26","ini":"2026-03-23","mes":"2026-03-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":14,"periodo":"30/03/26 a 04/04/26","ini":"2026-03-30","mes":"2026-03-01","concr":0.0,"sabado":"0","feriados":1.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":15,"periodo":"06/04/26 a 11/04/26","ini":"2026-04-06","mes":"2026-04-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":16,"periodo":"13/04/26 a 18/04/26","ini":"2026-04-13","mes":"2026-04-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":17,"periodo":"20/04/26 a 25/04/26","ini":"2026-04-20","mes":"2026-04-01","concr":0.0,"sabado":"0","feriados":1.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":18,"periodo":"27/04/26 a 02/05/26","ini":"2026-04-27","mes":"2026-04-01","concr":1.0,"sabado":"SIM","feriados":1.0,"area":539.94,"vol":53.0,"mont":11.0,"dias":4.5,"horas":39.6,"pm2sem":49.0855,"pm2dia":14.0244,"pm2h":1.5937,"pm3dia":1.3766,"pm3h":0.1564,"esp":0.0982,"rup":0.6275,"obs":"nan","detalhe":[{"data":"2026-04-30","torre":"Torre 01","pavto":"1° pavto.","trecho":"1","area":539.94,"vol":53.0}]},{"obra":"Arte Penha","ano":2026,"sem":19,"periodo":"04/05/26 a 09/05/26","ini":"2026-05-04","mes":"2026-05-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":20,"periodo":"11/05/26 a 16/05/26","ini":"2026-05-11","mes":"2026-05-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":387.97,"vol":29.0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":35.27,"pm2dia":6.4127,"pm2h":0.7287,"pm3dia":0.4793,"pm3h":0.0545,"esp":0.0747,"rup":1.3723,"obs":"nan","detalhe":[{"data":"2026-05-13","torre":"Torre 01","pavto":"1° pavto.","trecho":"2","area":387.97,"vol":29.0}]},{"obra":"Arte Penha","ano":2026,"sem":21,"periodo":"18/05/26 a 23/05/26","ini":"2026-05-18","mes":"2026-05-01","concr":2.0,"sabado":"SIM","feriados":0.0,"area":1032.18,"vol":96.0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":93.8345,"pm2dia":17.0608,"pm2h":1.9387,"pm3dia":1.5868,"pm3h":0.1803,"esp":0.093,"rup":0.5158,"obs":"nan","detalhe":[{"data":"2026-05-18","torre":"Torre 01","pavto":"1° pavto.","trecho":"1A","area":492.24,"vol":43.0},{"data":"2026-05-21","torre":"Torre 01","pavto":"2° pavto.","trecho":"1","area":539.94,"vol":53.0}]},{"obra":"Arte Penha","ano":2026,"sem":22,"periodo":"25/05/26 a 30/05/26","ini":"2026-05-25","mes":"2026-05-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":387.97,"vol":29.0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":35.27,"pm2dia":6.4127,"pm2h":0.7287,"pm3dia":0.4793,"pm3h":0.0545,"esp":0.0747,"rup":1.3723,"obs":"nan","detalhe":[{"data":"2026-05-30","torre":"Torre 01","pavto":"2° pavto.","trecho":"2","area":387.97,"vol":29.0}]},{"obra":"Arte Penha","ano":2026,"sem":23,"periodo":"01/06/26 a 06/06/26","ini":"2026-06-01","mes":"2026-06-01","concr":1.0,"sabado":"SIM","feriados":1.0,"area":522.03,"vol":42.0,"mont":11.0,"dias":4.5,"horas":39.6,"pm2sem":47.4573,"pm2dia":13.5592,"pm2h":1.5408,"pm3dia":1.0909,"pm3h":0.124,"esp":0.0805,"rup":0.649,"obs":"nan","detalhe":[{"data":"2026-06-02","torre":"Torre 01","pavto":"1° pavto.","trecho":"2A","area":522.03,"vol":42.0}]},{"obra":"Arte Penha","ano":2026,"sem":24,"periodo":"08/06/26 a 13/06/26","ini":"2026-06-08","mes":"2026-06-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":539.94,"vol":53.0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":49.0855,"pm2dia":8.9246,"pm2h":1.0142,"pm3dia":0.876,"pm3h":0.0995,"esp":0.0982,"rup":0.986,"obs":"nan","detalhe":[{"data":"2026-06-11","torre":"Torre 01","pavto":"3° pavto.","trecho":"1","area":539.94,"vol":53.0}]},{"obra":"Arte Penha","ano":2026,"sem":25,"periodo":"15/06/26 a 20/06/26","ini":"2026-06-15","mes":"2026-06-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1372.45,"vol":115.0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":124.7682,"pm2dia":22.6851,"pm2h":2.5779,"pm3dia":1.9008,"pm3h":0.216,"esp":0.0838,"rup":0.3879,"obs":"nan","detalhe":[{"data":"2026-06-16","torre":"Torre 01","pavto":"1° pavto.","trecho":"1B","area":492.24,"vol":43.0},{"data":"2026-06-18","torre":"Torre 01","pavto":"3° pavto.","trecho":"2","area":387.97,"vol":29.0},{"data":"2026-06-20","torre":"Torre 01","pavto":"2° pavto.","trecho":"1A","area":492.24,"vol":43.0}]},{"obra":"Arte Penha","ano":2026,"sem":26,"periodo":"22/06/26 a 27/06/26","ini":"2026-06-22","mes":"2026-06-01","concr":2.0,"sabado":"SIM","feriados":0.0,"area":1061.97,"vol":94.0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":96.5427,"pm2dia":17.5532,"pm2h":1.9947,"pm3dia":1.5537,"pm3h":0.1766,"esp":0.0885,"rup":0.5013,"obs":"nan","detalhe":[{"data":"2026-06-24","torre":"Torre 01","pavto":"4° pavto.","trecho":"1","area":539.94,"vol":53.0},{"data":"2026-06-27","torre":"Torre 01","pavto":"1° pavto.","trecho":"2B","area":522.03,"vol":41.0}]},{"obra":"Arte Penha","ano":2026,"sem":27,"periodo":"29/06/26 a 04/07/26","ini":"2026-06-29","mes":"2026-06-01","concr":2.0,"sabado":"SIM","feriados":0.0,"area":910.0,"vol":71.0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":82.7273,"pm2dia":15.0413,"pm2h":1.7092,"pm3dia":1.1736,"pm3h":0.1334,"esp":0.078,"rup":0.5851,"obs":"nan","detalhe":[{"data":"2026-06-30","torre":"Torre 01","pavto":"4° pavto.","trecho":"2","area":387.97,"vol":29.0},{"data":"2026-07-03","torre":"Torre 01","pavto":"2° pavto.","trecho":"2A","area":522.03,"vol":42.0}]},{"obra":"Arte Penha","ano":2026,"sem":28,"periodo":"06/07/26 a 11/07/26","ini":"2026-07-06","mes":"2026-07-01","concr":2.0,"sabado":"SIM","feriados":1.0,"area":1014.27,"vol":84.0,"mont":11.0,"dias":4.5,"horas":39.6,"pm2sem":92.2064,"pm2dia":26.3447,"pm2h":2.9937,"pm3dia":2.1818,"pm3h":0.2479,"esp":0.0828,"rup":0.334,"obs":"nan","detalhe":[{"data":"2026-07-07","torre":"Torre 01","pavto":"2° pavto.","trecho":"1B","area":492.24,"vol":43.0},{"data":"2026-07-11","torre":"Torre 01","pavto":"2° pavto.","trecho":"2B","area":522.03,"vol":41.0}]},{"obra":"Arte Penha","ano":2026,"sem":29,"periodo":"13/07/26 a 18/07/26","ini":"2026-07-13","mes":"2026-07-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":539.94,"vol":53.0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":49.0855,"pm2dia":8.9246,"pm2h":1.0142,"pm3dia":0.876,"pm3h":0.0995,"esp":0.0982,"rup":0.986,"obs":"nan","detalhe":[{"data":"2026-07-17","torre":"Torre 01","pavto":"5° pavto.","trecho":"1","area":539.94,"vol":53.0}]},{"obra":"Arte Penha","ano":2026,"sem":30,"periodo":"20/07/26 a 25/07/26","ini":"2026-07-20","mes":"2026-07-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":387.97,"vol":29.0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":35.27,"pm2dia":6.4127,"pm2h":0.7287,"pm3dia":0.4793,"pm3h":0.0545,"esp":0.0747,"rup":1.3723,"obs":"nan","detalhe":[{"data":"2026-07-25","torre":"Torre 01","pavto":"5° pavto.","trecho":"2","area":387.97,"vol":29.0}]},{"obra":"Arte Penha","ano":2026,"sem":31,"periodo":"27/07/26 a 01/08/26","ini":"2026-07-27","mes":"2026-07-01","concr":2.0,"sabado":"SIM","feriados":0.0,"area":1061.97,"vol":95.0,"mont":11.0,"dias":5.5,"horas":48.4,"pm2sem":96.5427,"pm2dia":17.5532,"pm2h":1.9947,"pm3dia":1.5702,"pm3h":0.1784,"esp":0.0895,"rup":0.5013,"obs":"nan","detalhe":[{"data":"2026-07-27","torre":"Torre 01","pavto":"3° pavto.","trecho":"2A","area":522.03,"vol":42.0},{"data":"2026-08-01","torre":"Torre 01","pavto":"6° pavto.","trecho":"1","area":539.94,"vol":53.0}]},{"obra":"Arte Penha","ano":2026,"sem":32,"periodo":"03/08/26 a 08/08/26","ini":"2026-08-03","mes":"2026-08-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":33,"periodo":"10/08/26 a 15/08/26","ini":"2026-08-10","mes":"2026-08-01","concr":2.0,"sabado":"SIM","feriados":0.0,"area":880.21,"vol":72.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":58.6807,"pm2dia":10.6692,"pm2h":1.2124,"pm3dia":0.8727,"pm3h":0.0992,"esp":0.0818,"rup":0.8248,"obs":"F C Oliveira desde 10/08/26 na obra (substituiu o Pitu)","detalhe":[{"data":"2026-08-12","torre":"Torre 01","pavto":"6° pavto.","trecho":"2","area":387.97,"vol":29.0},{"data":"2026-08-14","torre":"Torre 01","pavto":"4° pavto.","trecho":"1A","area":492.24,"vol":43.0}]},{"obra":"Arte Penha","ano":2026,"sem":34,"periodo":"17/08/26 a 22/08/26","ini":"2026-08-17","mes":"2026-08-01","concr":2.0,"sabado":"SIM","feriados":0.0,"area":1014.27,"vol":85.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":67.618,"pm2dia":12.2942,"pm2h":1.3971,"pm3dia":1.0303,"pm3h":0.1171,"esp":0.0838,"rup":0.7158,"obs":"nan","detalhe":[{"data":"2026-08-18","torre":"Torre 01","pavto":"4° pavto.","trecho":"2A","area":522.03,"vol":42.0},{"data":"2026-08-21","torre":"Torre 01","pavto":"4° pavto.","trecho":"1B","area":492.24,"vol":43.0}]},{"obra":"Arte Penha","ano":2026,"sem":35,"periodo":"24/08/26 a 29/08/26","ini":"2026-08-24","mes":"2026-08-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":539.94,"vol":53.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":35.996,"pm2dia":6.5447,"pm2h":0.7437,"pm3dia":0.6424,"pm3h":0.073,"esp":0.0982,"rup":1.3446,"obs":"nan","detalhe":[{"data":"2026-08-28","torre":"Torre 01","pavto":"6° pavto.","trecho":"1","area":539.94,"vol":53.0}]},{"obra":"Arte Penha","ano":2026,"sem":36,"periodo":"31/08/26 a 05/09/26","ini":"2026-08-31","mes":"2026-08-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1402.24,"vol":113.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":93.4827,"pm2dia":16.9968,"pm2h":1.9315,"pm3dia":1.3697,"pm3h":0.1556,"esp":0.0806,"rup":0.5177,"obs":"nan","detalhe":[{"data":"2026-08-31","torre":"Torre 01","pavto":"4° pavto.","trecho":"2B","area":522.03,"vol":41.0},{"data":"2026-09-01","torre":"Torre 01","pavto":"7° pavto.","trecho":"2","area":387.97,"vol":29.0},{"data":"2026-09-03","torre":"Torre 01","pavto":"5° pavto.","trecho":"1A","area":492.24,"vol":43.0}]},{"obra":"Arte Penha","ano":2026,"sem":37,"periodo":"07/09/26 a 12/09/26","ini":"2026-09-07","mes":"2026-09-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":539.94,"vol":53.0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":35.996,"pm2dia":6.5447,"pm2h":0.7437,"pm3dia":0.6424,"pm3h":0.073,"esp":0.0982,"rup":1.3446,"obs":"nan","detalhe":[{"data":"2026-09-08","torre":"Torre 01","pavto":"8° pavto.","trecho":"1","area":539.94,"vol":53.0}]},{"obra":"Arte Penha","ano":2026,"sem":38,"periodo":"14/09/26 a 19/09/26","ini":"2026-09-14","mes":"2026-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":39,"periodo":"21/09/26 a 26/09/26","ini":"2026-09-21","mes":"2026-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":40,"periodo":"28/09/26 a 03/10/26","ini":"2026-09-28","mes":"2026-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Arte Penha","ano":2026,"sem":41,"periodo":"05/10/26 a 10/10/26","ini":"2026-10-05","mes":"2026-10-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":15.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2025,"sem":1,"periodo":"29/12/25 a 03/01/26","ini":"2025-12-29","mes":"2025-12-01","concr":0.0,"sabado":"0","feriados":1.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":2,"periodo":"05/01/26 a 10/01/26","ini":"2026-01-05","mes":"2026-01-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":3,"periodo":"12/01/26 a 17/01/26","ini":"2026-01-12","mes":"2026-01-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":4,"periodo":"19/01/26 a 24/01/26","ini":"2026-01-19","mes":"2026-01-01","concr":0.0,"sabado":"0","feriados":1.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":5,"periodo":"26/01/26 a 31/01/26","ini":"2026-01-26","mes":"2026-01-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":6,"periodo":"02/02/26 a 07/02/26","ini":"2026-02-02","mes":"2026-02-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":7,"periodo":"09/02/26 a 14/02/26","ini":"2026-02-09","mes":"2026-02-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":8,"periodo":"16/02/26 a 21/02/26","ini":"2026-02-16","mes":"2026-02-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":9,"periodo":"23/02/26 a 28/02/26","ini":"2026-02-23","mes":"2026-02-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":10,"periodo":"02/03/26 a 07/03/26","ini":"2026-03-02","mes":"2026-03-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":11,"periodo":"09/03/26 a 14/03/26","ini":"2026-03-09","mes":"2026-03-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":12,"periodo":"16/03/26 a 21/03/26","ini":"2026-03-16","mes":"2026-03-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":13,"periodo":"23/03/26 a 28/03/26","ini":"2026-03-23","mes":"2026-03-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":14,"periodo":"30/03/26 a 04/04/26","ini":"2026-03-30","mes":"2026-03-01","concr":0.0,"sabado":"0","feriados":1.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":15,"periodo":"06/04/26 a 11/04/26","ini":"2026-04-06","mes":"2026-04-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":16,"periodo":"13/04/26 a 18/04/26","ini":"2026-04-13","mes":"2026-04-01","concr":0.0,"sabado":"0","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":0,"horas":0,"pm2sem":0.0,"pm2dia":0.0,"pm2h":null,"pm3dia":0.0,"pm3h":null,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":17,"periodo":"20/04/26 a 25/04/26","ini":"2026-04-20","mes":"2026-04-01","concr":2.0,"sabado":"SIM","feriados":1.0,"area":968.85,"vol":70.0,"mont":10.0,"dias":4.5,"horas":39.6,"pm2sem":96.885,"pm2dia":27.6814,"pm2h":3.1456,"pm3dia":2.0,"pm3h":0.2273,"esp":0.0723,"rup":0.3179,"obs":"nan","detalhe":[{"data":"2026-04-20","torre":"Torre 07","pavto":"1° pavto.","trecho":"1","area":481.81,"vol":33.0},{"data":"2026-04-24","torre":"Torre 07","pavto":"1° pavto.","trecho":"1A","area":487.04,"vol":37.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":18,"periodo":"27/04/26 a 02/05/26","ini":"2026-04-27","mes":"2026-04-01","concr":1.0,"sabado":"SIM","feriados":1.0,"area":316.69,"vol":26.0,"mont":10.0,"dias":4.5,"horas":39.6,"pm2sem":31.669,"pm2dia":9.0483,"pm2h":1.0282,"pm3dia":0.7429,"pm3h":0.0844,"esp":0.0821,"rup":0.9726,"obs":"nan","detalhe":[{"data":"2026-04-28","torre":"Torre 07","pavto":"1° pavto.","trecho":"2","area":316.69,"vol":26.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":19,"periodo":"04/05/26 a 09/05/26","ini":"2026-05-04","mes":"2026-05-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":518.47,"vol":38.0,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":51.847,"pm2dia":9.4267,"pm2h":1.0712,"pm3dia":0.6909,"pm3h":0.0785,"esp":0.0733,"rup":0.9335,"obs":"nan","detalhe":[{"data":"2026-05-04","torre":"Torre 07","pavto":"1° pavto.","trecho":"2A","area":518.47,"vol":38.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":20,"periodo":"11/05/26 a 16/05/26","ini":"2026-05-11","mes":"2026-05-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":21,"periodo":"18/05/26 a 23/05/26","ini":"2026-05-18","mes":"2026-05-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":22,"periodo":"25/05/26 a 30/05/26","ini":"2026-05-25","mes":"2026-05-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":23,"periodo":"01/06/26 a 06/06/26","ini":"2026-06-01","mes":"2026-06-01","concr":0.0,"sabado":"SIM","feriados":1.0,"area":0,"vol":0,"mont":0,"dias":4.5,"horas":39.6,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":24,"periodo":"08/06/26 a 13/06/26","ini":"2026-06-08","mes":"2026-06-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"nan","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":25,"periodo":"15/06/26 a 20/06/26","ini":"2026-06-15","mes":"2026-06-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":481.81,"vol":33.0,"mont":8.0,"dias":5.5,"horas":48.4,"pm2sem":60.2263,"pm2dia":10.9502,"pm2h":1.2443,"pm3dia":0.75,"pm3h":0.0852,"esp":0.0685,"rup":0.8036,"obs":"nan","detalhe":[{"data":"2026-06-17","torre":"Torre 07","pavto":"2° pavto.","trecho":"1","area":481.81,"vol":33.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":26,"periodo":"22/06/26 a 27/06/26","ini":"2026-06-22","mes":"2026-06-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":316.69,"vol":26.0,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":31.669,"pm2dia":5.758,"pm2h":0.6543,"pm3dia":0.4727,"pm3h":0.0537,"esp":0.0821,"rup":1.5283,"obs":"nan","detalhe":[{"data":"2026-06-26","torre":"Torre 07","pavto":"2° pavto.","trecho":"2","area":316.69,"vol":26.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":27,"periodo":"29/06/26 a 04/07/26","ini":"2026-06-29","mes":"2026-06-01","concr":1.0,"sabado":"SIM","feriados":0.0,"area":487.04,"vol":37.0,"mont":10.0,"dias":5.5,"horas":48.4,"pm2sem":48.704,"pm2dia":8.8553,"pm2h":1.0063,"pm3dia":0.6727,"pm3h":0.0764,"esp":0.076,"rup":0.9938,"obs":"nan","detalhe":[{"data":"2026-07-01","torre":"Torre 07","pavto":"2° pavto.","trecho":"1A","area":487.04,"vol":37.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":28,"periodo":"06/07/26 a 11/07/26","ini":"2026-07-06","mes":"2026-07-01","concr":2.0,"sabado":"SIM","feriados":1.0,"area":1000.28,"vol":71.0,"mont":10.0,"dias":4.5,"horas":39.6,"pm2sem":100.028,"pm2dia":28.5794,"pm2h":3.2477,"pm3dia":2.0286,"pm3h":0.2305,"esp":0.071,"rup":0.3079,"obs":"nan","detalhe":[{"data":"2026-07-06","torre":"Torre 07","pavto":"2° pavto.","trecho":"2A","area":518.47,"vol":38.0},{"data":"2026-07-10","torre":"Torre 07","pavto":"3° pavto.","trecho":"1","area":481.81,"vol":33.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":29,"periodo":"13/07/26 a 18/07/26","ini":"2026-07-13","mes":"2026-07-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1322.2,"vol":101.0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":110.1833,"pm2dia":20.0333,"pm2h":2.2765,"pm3dia":1.5303,"pm3h":0.1739,"esp":0.0764,"rup":0.4393,"obs":"nan","detalhe":[{"data":"2026-07-15","torre":"Torre 07","pavto":"3° pavto.","trecho":"1A","area":487.04,"vol":37.0},{"data":"2026-07-17","torre":"Torre 07","pavto":"3° pavto.","trecho":"2","area":316.69,"vol":26.0},{"data":"2026-07-18","torre":"Torre 07","pavto":"3° pavto.","trecho":"2A","area":518.47,"vol":38.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":30,"periodo":"20/07/26 a 25/07/26","ini":"2026-07-20","mes":"2026-07-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":1804.01,"vol":134.0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":150.3342,"pm2dia":27.3335,"pm2h":3.1061,"pm3dia":2.0303,"pm3h":0.2307,"esp":0.0743,"rup":0.3219,"obs":"nan","detalhe":[{"data":"2026-07-21","torre":"Torre 07","pavto":"4° pavto.","trecho":"1","area":481.81,"vol":33.0},{"data":"2026-07-22","torre":"Torre 07","pavto":"4° pavto.","trecho":"1A","area":487.04,"vol":37.0},{"data":"2026-07-23","torre":"Torre 07","pavto":"4° pavto.","trecho":"2","area":316.69,"vol":26.0},{"data":"2026-07-24","torre":"Torre 07","pavto":"4° pavto.","trecho":"2A","area":518.47,"vol":38.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":31,"periodo":"27/07/26 a 01/08/26","ini":"2026-07-27","mes":"2026-07-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":1804.01,"vol":134.0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":150.3342,"pm2dia":27.3335,"pm2h":3.1061,"pm3dia":2.0303,"pm3h":0.2307,"esp":0.0743,"rup":0.3219,"obs":"nan","detalhe":[{"data":"2026-07-27","torre":"Torre 07","pavto":"5° pavto.","trecho":"1","area":481.81,"vol":33.0},{"data":"2026-07-29","torre":"Torre 07","pavto":"5° pavto.","trecho":"1A","area":487.04,"vol":37.0},{"data":"2026-07-30","torre":"Torre 07","pavto":"5° pavto.","trecho":"2","area":316.69,"vol":26.0},{"data":"2026-08-01","torre":"Torre 07","pavto":"5° pavto.","trecho":"2A","area":518.47,"vol":38.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":32,"periodo":"03/08/26 a 08/08/26","ini":"2026-08-03","mes":"2026-08-01","concr":3.0,"sabado":"SIM","feriados":0.0,"area":1285.54,"vol":96.0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":107.1283,"pm2dia":19.4779,"pm2h":2.2134,"pm3dia":1.4545,"pm3h":0.1653,"esp":0.0747,"rup":0.4518,"obs":"nan","detalhe":[{"data":"2026-08-03","torre":"Torre 07","pavto":"6° pavto.","trecho":"1","area":481.81,"vol":33.0},{"data":"2026-08-05","torre":"Torre 07","pavto":"6° pavto.","trecho":"1A","area":487.04,"vol":37.0},{"data":"2026-08-06","torre":"Torre 07","pavto":"6° pavto.","trecho":"2","area":316.69,"vol":26.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":33,"periodo":"10/08/26 a 15/08/26","ini":"2026-08-10","mes":"2026-08-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":1804.01,"vol":134.0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":150.3342,"pm2dia":27.3335,"pm2h":3.1061,"pm3dia":2.0303,"pm3h":0.2307,"esp":0.0743,"rup":0.3219,"obs":"nan","detalhe":[{"data":"2026-08-10","torre":"Torre 07","pavto":"6° pavto.","trecho":"2A","area":518.47,"vol":38.0},{"data":"2026-08-12","torre":"Torre 07","pavto":"7° pavto.","trecho":"1","area":481.81,"vol":33.0},{"data":"2026-08-13","torre":"Torre 07","pavto":"7° pavto.","trecho":"1A","area":487.04,"vol":37.0},{"data":"2026-08-14","torre":"Torre 07","pavto":"7° pavto.","trecho":"2","area":316.69,"vol":26.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":34,"periodo":"17/08/26 a 22/08/26","ini":"2026-08-17","mes":"2026-08-01","concr":5.0,"sabado":"SIM","feriados":0.0,"area":2322.48,"vol":172.0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":193.54,"pm2dia":35.1891,"pm2h":3.9988,"pm3dia":2.6061,"pm3h":0.2961,"esp":0.0741,"rup":0.2501,"obs":"aguardando novos dados ConsulteGeo","detalhe":[{"data":"2026-08-17","torre":"Torre 07","pavto":"7° pavto.","trecho":"2A","area":518.47,"vol":38.0},{"data":"2026-08-18","torre":"Torre 07","pavto":"8° pavto.","trecho":"1","area":481.81,"vol":33.0},{"data":"2026-08-19","torre":"Torre 07","pavto":"8° pavto.","trecho":"1A","area":487.04,"vol":37.0},{"data":"2026-08-20","torre":"Torre 07","pavto":"8° pavto.","trecho":"2","area":316.69,"vol":26.0},{"data":"2026-08-21","torre":"Torre 07","pavto":"8° pavto.","trecho":"2A","area":518.47,"vol":38.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":35,"periodo":"24/08/26 a 29/08/26","ini":"2026-08-24","mes":"2026-08-01","concr":4.0,"sabado":"SIM","feriados":0.0,"area":1602.23,"vol":122.0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":133.5192,"pm2dia":24.2762,"pm2h":2.7587,"pm3dia":1.8485,"pm3h":0.2101,"esp":0.0761,"rup":0.3625,"obs":"aguardando novos dados ConsulteGeo","detalhe":[{"data":"2026-08-25","torre":"Torre 07","pavto":"9° pavto.","trecho":"1","area":481.81,"vol":33.0},{"data":"2026-08-26","torre":"Torre 05","pavto":"Térreo","trecho":"2","area":316.69,"vol":26.0},{"data":"2026-08-27","torre":"Torre 07","pavto":"9° pavto.","trecho":"1A","area":487.04,"vol":37.0},{"data":"2026-08-28","torre":"Torre 07","pavto":"9° pavto.","trecho":"2","area":316.69,"vol":26.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":36,"periodo":"31/08/26 a 05/09/26","ini":"2026-08-31","mes":"2026-08-01","concr":2.0,"sabado":"SIM","feriados":0.0,"area":1036.94,"vol":76.0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":86.4117,"pm2dia":15.7112,"pm2h":1.7854,"pm3dia":1.1515,"pm3h":0.1309,"esp":0.0733,"rup":0.5601,"obs":"aguardando novos dados ConsulteGeo","detalhe":[{"data":"2026-09-01","torre":"Torre 07","pavto":"9° pavto.","trecho":"2A","area":518.47,"vol":38.0},{"data":"2026-09-03","torre":"Torre 05","pavto":"Térreo","trecho":"2A","area":518.47,"vol":38.0}]},{"obra":"Origem Itaquera","ano":2026,"sem":37,"periodo":"07/09/26 a 12/09/26","ini":"2026-09-07","mes":"2026-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"aguardando novos dados ConsulteGeo","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":38,"periodo":"14/09/26 a 19/09/26","ini":"2026-09-14","mes":"2026-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"aguardando novos dados ConsulteGeo","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":39,"periodo":"21/09/26 a 26/09/26","ini":"2026-09-21","mes":"2026-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"aguardando novos dados ConsulteGeo","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":40,"periodo":"28/09/26 a 03/10/26","ini":"2026-09-28","mes":"2026-09-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"aguardando novos dados ConsulteGeo","detalhe":[]},{"obra":"Origem Itaquera","ano":2026,"sem":41,"periodo":"05/10/26 a 10/10/26","ini":"2026-10-05","mes":"2026-10-01","concr":0.0,"sabado":"SIM","feriados":0.0,"area":0,"vol":0,"mont":12.0,"dias":5.5,"horas":48.4,"pm2sem":0.0,"pm2dia":0.0,"pm2h":0.0,"pm3dia":0.0,"pm3h":0.0,"esp":null,"rup":null,"obs":"aguardando novos dados ConsulteGeo","detalhe":[]}],"resumo":[{"obra":"Altus Vila Prudente","efetivo":14.6721,"efetivoAj":15.0,"m2med":26.2144,"m2aj":28.9909,"m2max":42.3905,"m3med":2.3302,"m3aj":2.6371,"m3max":3.7879,"esp":0.089,"espaj":0.0898,"espmax":0.1035},{"obra":"Serena","efetivo":16.0,"efetivoAj":16.0,"m2med":25.0932,"m2aj":27.8324,"m2max":42.0546,"m3med":2.3022,"m3aj":2.5547,"m3max":3.8571,"esp":0.0916,"espaj":0.0919,"espmax":0.0947},{"obra":"Arte Penha","efetivo":12.4583,"efetivoAj":12.5652,"m2med":12.9977,"m2aj":14.3147,"m2max":26.3447,"m3med":1.1212,"m3aj":1.2496,"m3max":2.1818,"esp":0.0865,"espaj":0.0889,"espmax":0.0982},{"obra":"Origem Itaquera","efetivo":11.2,"efetivoAj":10.8889,"m2med":19.7992,"m2aj":22.7772,"m2max":35.1891,"m3med":1.4693,"m3aj":1.6836,"m3max":2.6061,"esp":0.0748,"espaj":0.0748,"espmax":0.0821}],"trechos":[{"obra":"Altus Vila Prudente","trecho":"1","desc":"aptos. final 07, 08, 09 + 2 elevadores + escada","area":579.96,"vol":60.0},{"obra":"Altus Vila Prudente","trecho":"2","desc":"aptos. final 04, 05, 06","area":455.44,"vol":46.5},{"obra":"Altus Vila Prudente","trecho":"3","desc":"aptos. final 12, 11, 10 + 2 elevadores + corredor ","area":699.42,"vol":52.0},{"obra":"Altus Vila Prudente","trecho":"4","desc":"aptos. final 01, 02, 03 + corredor","area":591.22,"vol":47.0},{"obra":"Altus Vila Prudente","trecho":"1 - plat","desc":"Platibanda trecho 1","area":null,"vol":null},{"obra":"Altus Vila Prudente","trecho":"2 - plat","desc":"Platibanda trecho 2","area":null,"vol":null},{"obra":"Altus Vila Prudente","trecho":"3 - plat","desc":"Platibanda trecho 3","area":null,"vol":null},{"obra":"Altus Vila Prudente","trecho":"4 - plat","desc":"Platibanda trecho 4","area":null,"vol":null},{"obra":"Serena","trecho":"1","desc":"aptos. final 07, 08, 09 + 2 elevadores + escada","area":692.53,"vol":61.0},{"obra":"Serena","trecho":"2","desc":"aptos. final 10, 11, 12  + 2 elevadores + corredor","area":624.93,"vol":58.0},{"obra":"Serena","trecho":"1A","desc":"aptos. final 04, 05, 06 ","area":494.66,"vol":48.0},{"obra":"Serena","trecho":"2A","desc":"aptos. final 01, 02, 03 + corredor","area":542.94,"vol":49.0},{"obra":"Serena","trecho":"1 - plat","desc":"Platibanda trecho 1","area":null,"vol":null},{"obra":"Serena","trecho":"2  - plat","desc":"Platibanda trecho 2","area":null,"vol":null},{"obra":"Serena","trecho":"1A - plat","desc":"Platibanda trecho 1A","area":null,"vol":null},{"obra":"Serena","trecho":"2A - plat","desc":"Platibanda trecho 2A","area":null,"vol":null},{"obra":"Arte Penha","trecho":"1","desc":"aptos. final 08, 09 + 2 elevadores + escada","area":539.94,"vol":53.0},{"obra":"Arte Penha","trecho":"2","desc":"aptos. final 01, 16 + 2 elevadores","area":387.97,"vol":29.0},{"obra":"Arte Penha","trecho":"1A","desc":"aptos. final 05, 06, 07 ","area":492.24,"vol":43.0},{"obra":"Arte Penha","trecho":"2A","desc":"aptos. final 02, 03, 04 + corredor","area":522.03,"vol":42.0},{"obra":"Arte Penha","trecho":"1B","desc":"aptos. final 10, 11, 12","area":492.24,"vol":43.0},{"obra":"Arte Penha","trecho":"2B","desc":"aptos. final 13, 14, 15 + corredor","area":522.03,"vol":41.0},{"obra":"Arte Penha","trecho":"1 - plat","desc":"Platibanda trecho 1","area":null,"vol":null},{"obra":"Arte Penha","trecho":"2 - plat","desc":"Platibanda trecho 2","area":null,"vol":null},{"obra":"Arte Penha","trecho":"1A - plat","desc":"Platibanda trecho 1A","area":null,"vol":null},{"obra":"Arte Penha","trecho":"2A - plat","desc":"Platibanda trecho 2A","area":null,"vol":null},{"obra":"Arte Penha","trecho":"1B - plat","desc":"Platibanda trecho 1B","area":null,"vol":null},{"obra":"Arte Penha","trecho":"2B - plat","desc":"Platibanda trecho 2B","area":null,"vol":null},{"obra":"Origem Itaquera","trecho":"1","desc":"aptos. final 07, 08 + escada + 2 elevadores","area":481.81,"vol":33.0},{"obra":"Origem Itaquera","trecho":"2","desc":"aptos. final 09, 10 + corredor","area":316.69,"vol":26.0},{"obra":"Origem Itaquera","trecho":"1A","desc":"aptos. final 04, 05, 06","area":487.04,"vol":37.0},{"obra":"Origem Itaquera","trecho":"2A","desc":"aptos. final 01, 02, 03 + corredor","area":518.47,"vol":38.0},{"obra":"Origem Itaquera","trecho":"1 - plat","desc":"Platibanda trecho 1","area":null,"vol":null},{"obra":"Origem Itaquera","trecho":"2  - plat","desc":"Platibanda trecho 2","area":null,"vol":null},{"obra":"Origem Itaquera","trecho":"1A - plat","desc":"Platibanda trecho 1A","area":null,"vol":null},{"obra":"Origem Itaquera","trecho":"2A - plat","desc":"Platibanda trecho 2A","area":null,"vol":null}],"cargos":[{"cargo":"Armador","salario":2801.98,"comEncargos":5323.762},{"cargo":"Montador","salario":2900.0,"comEncargos":5510.0},{"cargo":"Ajudante","salario":2303.75,"comEncargos":4377.125}],"equip":[{"tipo":"Grua","mensal":60000.0},{"tipo":"Mini grua","mensal":14000.0}],"areaForma":[{"obra":"ARTE PENHA","quartos":"2Q","tipologia":"B236","aptos":272.0,"areaFormaSLaje":37981.943,"areaLaje":12950.578,"indice":2.9328,"custoParedeMO":1746359.0696,"areaMontagem":52417.335,"rsPorM2":33.3164,"rsPorApto":6420.4378,"custoInst":791.09,"instConc60":474.654,"instPorM2":2.463,"totalPorM2":35.7795},{"obra":"SERENA","quartos":"2Q","tipologia":"B236","aptos":285.0,"areaFormaSLaje":42024.033,"areaLaje":14286.574,"indice":2.9415,"custoParedeMO":1975524.2624,"areaMontagem":57381.6758,"rsPorM2":34.4278,"rsPorApto":6931.6641,"custoInst":791.09,"instConc60":474.654,"instPorM2":2.3575,"totalPorM2":36.7853},{"obra":"ITAQUERA","quartos":"2Q","tipologia":"B227","aptos":100.0,"areaFormaSLaje":12884.35,"areaLaje":5107.31,"indice":2.5227,"custoParedeMO":637509.9347,"areaMontagem":18745.5547,"rsPorM2":34.0086,"rsPorApto":6375.0993,"custoInst":810.19,"instConc60":486.114,"instPorM2":2.5932,"totalPorM2":36.6018},{"obra":"L1NE PRAÇA DA ÁRVORE","quartos":"2Q;1Q","tipologia":"B101","aptos":322.0,"areaFormaSLaje":39004.2411,"areaLaje":14032.6751,"indice":2.7795,"custoParedeMO":1980922.6666,"areaMontagem":54231.3674,"rsPorM2":36.5272,"rsPorApto":6151.9337,"custoInst":854.36,"instConc60":512.616,"instPorM2":3.0437,"totalPorM2":39.5709},{"obra":"L1NE PARADA INGLESA","quartos":"2Q;1Q","tipologia":"B101","aptos":285.0,"areaFormaSLaje":31535.051,"areaLaje":12654.264,"indice":2.492,"custoParedeMO":1642842.8597,"areaMontagem":45044.324,"rsPorM2":36.4717,"rsPorApto":5764.3609,"custoInst":834.72,"instConc60":500.832,"instPorM2":3.1688,"totalPorM2":39.6405},{"obra":"MOB BARRA FUNDA","quartos":"2Q;1Q","tipologia":"B101","aptos":322.0,"areaFormaSLaje":43162.742,"areaLaje":14021.766,"indice":3.0783,"custoParedeMO":2055563.8892,"areaMontagem":53909.2259,"rsPorM2":38.1301,"rsPorApto":6383.7388,"custoInst":698.47,"instConc60":419.082,"instPorM2":2.5032,"totalPorM2":40.6333},{"obra":"SANTO AMARO 013","quartos":"3Q;2Q;2QS","tipologia":"B318","aptos":170.0,"areaFormaSLaje":27282.731,"areaLaje":10181.272,"indice":2.6797,"custoParedeMO":1291025.5721,"areaMontagem":37664.2406,"rsPorM2":34.2772,"rsPorApto":7594.2681,"custoInst":800.0,"instConc60":480.0,"instPorM2":2.1665,"totalPorM2":36.4437}]}</script>
+<script>
+(function(){
+"use strict";
+let D = null;                       // preenchido em iniciar()
+let OBRAS = [];
+let EIXO = [], POSK = new Map();
+
+/* origem dos dados: arquivo publicado ao lado do index.html.
+   Se falhar, cai para a cópia embutida no próprio HTML. */
+const CONFIG = { fonte: 'dados/dados.json' };
+
+const COR = {'Serena':'var(--serena)','Arte Penha':'var(--penha)','Origem Itaquera':'var(--itaquera)'};
+const HEX = {'Serena':'#4CAF50','Arte Penha':'#F0912F','Origem Itaquera':'#4C9FE8',
+             'Altus Vila Prudente':'#E06C9F'};
+const MAPA_ORC = {'Serena':'SERENA','Arte Penha':'ARTE PENHA','Origem Itaquera':'ITAQUERA'};
+const PALETA = ['#E06C9F','#4CAF50','#F0912F','#4C9FE8','#00A9A5','#B58900','#7D3C98','#6C7A89',
+                '#E8590C','#2E86C1','#5D4037','#1F3864'];
+
+const est = {
+  obras: new Set(),
+  unid: 'm2',
+  metas: {m2:40, m3:3, h:3.1, concr:5},
+  meta: 40,
+  kIni: null, kFim: null,
+  altus: false,
+  tratada: false,
+  zeros: false,
+  aba: 'prod'
+};
+
+/* ---------- utilitários ---------- */
+const nf = (v,d)=> (v===null||v===undefined||isNaN(v)) ? '—' :
+  Number(v).toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const media = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
+const percentilInc = (a,p) => { const v=[...a].sort((x,y)=>x-y), n=v.length; if(!n) return null; if(n===1) return v[0];
+  const r=p*(n-1), i=Math.floor(r), f=r-i; return i+1<n ? v[i]+f*(v[i+1]-v[i]) : v[n-1]; };
+/* média ajustada da planilha: descarta as semanas abaixo do percentil 15 */
+const ajustada = a => { if(!a.length) return null; const lim = percentilInc(a,0.15); return media(a.filter(x=>x>=lim)); };
+const mediana = a => { if(!a.length) return null; const b=[...a].sort((x,y)=>x-y); const m=b.length>>1;
+  return b.length%2 ? b[m] : (b[m-1]+b[m])/2; };
+const chave = s => s.ano*100 + s.sem;
+const curto = p => (p||'').split(' a ')[0];
+
+const MES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+function montaEixo(){
+  const m = new Map();
+  D.semanas.forEach(s=>{
+    const k = chave(s);
+    if(m.has(k)) return;
+    const d = s.ini ? new Date(s.ini+'T00:00:00') : (s.mes ? new Date(s.mes+'T00:00:00') : null);
+    m.set(k, {k, sem:s.sem, ano:s.ano, periodo:s.periodo,
+      mes: d ? d.getMonth() : null, anoMes: d ? d.getFullYear() : s.ano});
+  });
+  EIXO = [...m.values()].sort((a,b)=>a.k-b.k);
+  POSK = new Map(EIXO.map((e,i)=>[e.k,i]));
+}
+function rotMes(e){ return e.mes==null ? '' : MES[e.mes]+'/'+String(e.anoMes).slice(2); }
+function rotSemana(e){ return e ? `S${e.sem} · ${rotMes(e)}` : '—'; }
+/* meses presentes na base, com a faixa de semanas que cada um cobre */
+let MESES = [];
+function montaMeses(){
+  const m = new Map();
+  EIXO.forEach((e,i)=>{
+    if(e.mes==null) return;
+    const id = e.anoMes + '-' + String(e.mes+1).padStart(2,'0');
+    const it = m.get(id) || {id, rot:rotMes(e), ini:i, fim:i, semanas:0};
+    it.ini = Math.min(it.ini,i); it.fim = Math.max(it.fim,i); it.semanas++;
+    m.set(id,it);
+  });
+  MESES = [...m.values()].sort((a,b)=> a.id<b.id?-1:1);
+}
+function rotEixo(k){ const e = EIXO[POSK.get(k)]; return e ? [`S${e.sem}`, rotMes(e)] : [`S${k%100}`,'']; }
+
+function campoProd(u){ return u==='m2' ? 'pm2dia' : u==='m3' ? 'pm3dia' : u==='h' ? 'pm2h' : 'concr'; }
+function rotuloProd(u){ return u==='m2' ? 'm²/dia·montador' : u==='m3' ? 'm³/dia·montador'
+  : u==='h' ? 'm²/h·montador' : 'concretagens/semana'; }
+function casasProd(){ return est.unid==='concr' ? 0 : 1; }   // metas e campos de entrada
+function casasValor(){ return 1; }                             // valores calculados nos gráficos
+function textoUnidade(){
+  return est.unid==='m2' ? 'm² por montador por dia'
+       : est.unid==='m3' ? 'm³ por montador por dia'
+       : est.unid==='h'  ? 'm² por montador por hora'
+       : 'concretagens por semana';
+}
+function textosUnidade(){
+  const t = textoUnidade();
+  document.querySelectorAll('[data-uni]').forEach(el=>{
+    const tipo = el.getAttribute('data-uni');
+    el.textContent = tipo==='semanal' ? t + ', semana a semana'
+      : t;
+  });
+}
+
+/* legenda de obras reutilizada por todos os gráficos */
+function legObras(id, presentes, extras){
+  const el = document.getElementById(id); if(!el) return;
+  const lista = (presentes && presentes.length ? presentes : OBRAS.filter(o=>est.obras.has(o)));
+  const ordem = OBRAS.filter(o=>lista.indexOf(o)>=0);
+  const itens = ordem.map(o=>`<span><i style="background:${HEX[o]}"></i>${esc(o)}</span>`).join('');
+  el.innerHTML = itens + (extras || '');
+}
+
+/* ---------- filtro ---------- */
+function filtradas(){
+  return D.semanas.filter(s =>
+    est.obras.has(s.obra) && chave(s)>=est.kIni && chave(s)<=est.kFim &&
+    (est.zeros ? true : s.area>0)
+  ).sort((a,b)=> chave(a)-chave(b) || a.obra.localeCompare(b.obra));
+}
+function comProducao(){ return filtradas().filter(s=>s.area>0); }
+
+/* ================= motor de gráficos SVG ================= */
+let W = 900;
+function eixoTicks(min,max,n){
+  const span = max-min || 1;
+  const bruto = span/n;
+  const mag = Math.pow(10, Math.floor(Math.log10(bruto)));
+  const passo = [1,2,2.5,5,10].map(m=>m*mag).find(v=>v>=bruto) || 10*mag;
+  const ini = Math.floor(min/passo)*passo, fim = Math.ceil(max/passo)*passo;
+  const out=[]; for(let v=ini; v<=fim+passo/1e6; v+=passo) out.push(+v.toFixed(10));
+  return out;
+}
+function moldura(H, pad, yTicks, yEsc, titY){
+  let g = '';
+  const passo = yTicks.length>1 ? Math.abs(yTicks[1]-yTicks[0]) : 1;
+  const inteiros = yTicks.every(t=>Number.isInteger(t));
+  const dec = inteiros ? 0 : passo>=10 ? 0 : passo>=1 ? 1 : passo>=0.1 ? 2 : 3;
+  yTicks.forEach(t=>{
+    const y = yEsc(t);
+    g += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${y}" y2="${y}" stroke="var(--rule-soft)" stroke-width="1"/>`;
+    g += `<text class="num" x="${pad.l-8}" y="${y+3.5}" text-anchor="end">${t===0?'0':nf(t,dec)}</text>`;
+  });
+  g += `<line x1="${pad.l}" x2="${pad.l}" y1="${pad.t}" y2="${H-pad.b}" stroke="var(--rule)"/>`;
+  g += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${H-pad.b}" y2="${H-pad.b}" stroke="var(--rule)"/>`;
+  if(titY) g += `<text x="${pad.l}" y="${pad.t-11}" text-anchor="start" font-size="10.5">${esc(titY)}</text>`;
+  return g;
+}
+function svgOut(el, H, corpo){
+  el.innerHTML = `<svg class="g" viewBox="0 0 ${W} ${H}" role="img">${corpo}</svg>`;
+}
+/* usa a largura disponível, mas nunca comprime abaixo do mínimo legível */
+function svgRolavel(el, H, corpo, minPx){
+  el.innerHTML = `<div class="rolavel"><svg class="g" viewBox="0 0 ${W} ${H}" role="img" ` +
+    `style="min-width:${Math.round(minPx)}px">${corpo}</svg></div>`;
+}
+/* escala inteira: concretagens não têm casa decimal */
+function ticksInteiros(max){
+  const cand = [1,2,5,10,20,25,50];
+  const p = cand.find(p => max/p <= 5) || Math.ceil(max/5);
+  const out = [];
+  for(let v=0; v<=Math.ceil(max/p)*p; v+=p) out.push(v);
+  return out;
+}
+function vazio(el, msg){
+  el.innerHTML = `<div class="vazio">${esc(msg)}</div>`;
+  const alvos = ['leg' + el.id.slice(1),
+                 'leg' + el.id.charAt(0).toUpperCase() + el.id.slice(1)];
+  alvos.forEach(id=>{ const l = document.getElementById(id); if(l) l.innerHTML = ''; });
+}
+
+/* ================= painel de produtividade ================= */
+const NAVY='#1F3864', TEAL='#4EC3B4', VERM='#E00000';
+const MEDIA_COR='#6C4FA1';   // média entre as obras
+function tracejado(cor){
+  return `<svg width="22" height="8" style="vertical-align:middle;margin-right:6px" aria-hidden="true">` +
+         `<line x1="0" y1="4" x2="22" y2="4" stroke="${cor}" stroke-width="2" stroke-dasharray="5 3"/></svg>`;
+}
+
+function rotMedia(){ return est.tratada ? 'Média tratada' : 'Média'; }
+function corteObra(o){
+  const campo = campoProd(est.unid);
+  const v = comProducao().filter(s=>s.obra===o).map(s=>s[campo]).filter(x=>x!=null && x>0);
+  return v.length ? percentilInc(v,0.15) : null;
+}
+function descartada(s){
+  if(!est.tratada) return false;
+  const campo = campoProd(est.unid), v = s[campo];
+  if(v==null || v<=0) return false;
+  const lim = corteObra(s.obra);
+  return lim!=null && v < lim;
+}
+function serieObra(o){
+  const campo = campoProd(est.unid);
+  const ss = comProducao().filter(s=>s.obra===o);
+  const v = ss.map(s=>s[campo]).filter(x=>x!=null && x>0);
+  if(!v.length) return null;
+  const aj = ajustada(v), corte = percentilInc(v,0.15);
+  return {obra:o, n:v.length, vals:v, corte,
+    nUsadas: v.filter(x=>x>=corte).length,
+    media:media(v), ajust:aj, med: est.tratada ? aj : media(v), max:Math.max(...v),
+    efetivo:media(ss.map(s=>s.mont).filter(x=>x>0)),
+    esp:media(ss.map(s=>s.esp).filter(x=>x>0)),
+    area:ss.reduce((a,s)=>a+s.area,0), vol:ss.reduce((a,s)=>a+s.vol,0),
+    concr:ss.reduce((a,s)=>a+(s.concr||0),0)};
+}
+function seriesObras(){
+  const out = OBRAS.filter(o=>est.obras.has(o)).map(serieObra).filter(Boolean);
+  if(est.altus && est.unid!=='h' && est.unid!=='concr' && !OBRAS.includes('Altus Vila Prudente')){
+    const r = D.resumo && D.resumo.find(x=>x.obra==='Altus Vila Prudente');
+    if(r) out.unshift({obra:'Altus Vila Prudente', ref:true, n:null, vals:[],
+      media: est.unid==='m2'?r.m2med:r.m3med, ajust: est.unid==='m2'?r.m2aj:r.m3aj,
+      med: est.tratada ? (est.unid==='m2'?r.m2aj:r.m3aj) : (est.unid==='m2'?r.m2med:r.m3med),
+      max: est.unid==='m2'?r.m2max:r.m3max, efetivo:r.efetivo, esp:r.espaj,
+      area:null, vol:null, concr:null});
+  }
+  return out;
+}
+const CINZA='#8A94A0';
+function corObra(s){ return s && s.ref ? CINZA : (HEX[(s&&s.obra)||s] || NAVY); }
+function unidCurta(){ return est.unid==='m2'?'m²/montador/dia' : est.unid==='m3'?'m³/montador/dia'
+  : est.unid==='h'?'m²/montador/hora' : 'concretagens/semana'; }
+
+/* ---------- cartões de indicador ---------- */
+function cartoes(){
+  const campo = campoProd(est.unid);
+  const todos = comProducao().filter(s=>!descartada(s)).map(s=>s[campo]).filter(v=>v!=null && v>0);
+  const S = seriesObras();                       // inclui o benchmark, se ligado
+  const prop = S.filter(s=>!s.ref);              // apenas obras com apontamento semanal
+  const melhorMed = S.length ? S.reduce((a,b)=> b.med>a.med?b:a) : null;
+  const comMax = S.filter(s=>s.max!=null);
+  const melhorMax = comMax.length ? comMax.reduce((a,b)=> b.max>a.max?b:a) : null;
+  const acima = prop.filter(s=>s.med>=est.meta).length;
+  const un = unidCurta();
+  const marca = s => s ? esc(s.obra) + (s.ref?' *':'') : '—';
+  const tratLabel = est.tratada ? ' TRATADA' : '';
+  const cards = [
+    {rot: `PRODUTIVIDADE GERAL (MÉDIA${tratLabel})`,
+     val:nf(media(todos),1), uni:un,
+     dica: est.tratada ? 'Média das semanas com produção, descartando as que ficam abaixo do percentil 15 de cada obra.'
+                       : 'Média de todas as semanas com produção das obras selecionadas.'},
+    {rot: `MELHOR OBRA (MÉDIA${tratLabel})`,
+     sub:marca(melhorMed), val:nf(melhorMed?melhorMed.med:null,1), uni:un,
+     dica:'Obra com a maior média no período filtrado.'},
+    {rot:'MELHOR OBRA (MÁXIMO)', sub:marca(melhorMax), val:nf(melhorMax?melhorMax.max:null,1), uni:un,
+     dica:'Melhor semana já registrada, entre todas as obras selecionadas.'},
+    {rot:'META', val:nf(est.meta, est.unid==='concr'?0:1), uni:un,
+     dica:'Definida no filtro, no alto da página.'},
+    {rot:'OBRAS COM MÉDIA ACIMA DA META', val:`${acima} de ${prop.length}`,
+     uni: prop.length ? nf(acima/prop.length*100,0)+'%' : '—',
+     dica:'Conta apenas obras com apontamento semanal; o benchmark fica de fora.'},
+  ];
+  const nota = S.some(s=>s.ref) ? '<div class="notaCartao">* Altus Vila Prudente entra como benchmark, com os valores consolidados da planilha.</div>' : '';
+  document.getElementById('cartoes').innerHTML = cards.map(c=>
+    `<div class="cartao" title="${esc(c.dica||'')}"><div class="rot">${esc(c.rot)}</div>` +
+    (c.sub?`<div class="sub">${c.sub}</div>`:'') +
+    `<div class="val">${c.val}</div><div class="uni">${esc(c.uni)}</div></div>`).join('');
+  const el = document.getElementById('notaCartoes');
+  if(el) el.innerHTML = nota;
+}
+
+/* ---------- 1. média x máximo por obra ---------- */
+function g1(){
+  const el = document.getElementById('g1');
+  const S = seriesObras();
+  if(!S.length) return vazio(el,'Nenhuma obra com produção no período.');
+  W = 470;
+  const H=310, pad={l:40,r:12,t:46,b:44};
+  const top = Math.max(...S.map(s=>s.max), est.meta)*1.14;
+  const yT = eixoTicks(0,top,4), y1=yT[yT.length-1];
+  const rotM = rotMedia();
+  const geral = media(S.map(s=>s.med).filter(v=>v!=null));   // média entre as obras, benchmark incluso
+  const yEsc = v => pad.t + (H-pad.t-pad.b)*(1-v/y1);
+  let c = '';
+  // legenda no topo — cada item mede o próprio texto para nada se sobrepor
+  const larguraTexto = t => t.length * 5.75;          // aproximação para 11px
+  const itens = [
+    {tipo:'quadro', cor:NAVY, txt:rotM},
+    {tipo:'quadro', cor:TEAL, txt:'Máximo'},
+  ];
+  if(geral!=null) itens.push({tipo:'traco', cor:MEDIA_COR, txt:`Média geral (${nf(geral,casasValor())})`});
+  if(est.meta>0) itens.push({tipo:'traco', cor:VERM, txt:`Meta (${nf(est.meta,casasProd())})`});
+  const largItem = it => (it.tipo==='traco' ? 26 : 11) + 6 + larguraTexto(it.txt);
+  const vao = itens.length>3 ? 15 : 20;
+  const total = itens.reduce((a,it)=>a+largItem(it),0) + vao*(itens.length-1);
+  let x = W/2 - total/2;
+  itens.forEach(it=>{
+    if(it.tipo==='quadro'){
+      c += `<rect x="${x.toFixed(1)}" y="8" width="11" height="11" fill="${it.cor}"/>`;
+      c += `<text x="${(x+17).toFixed(1)}" y="18" font-size="11" fill="var(--ink)">${esc(it.txt)}</text>`;
+    } else {
+      c += `<line x1="${x.toFixed(1)}" x2="${(x+26).toFixed(1)}" y1="13.5" y2="13.5" stroke="${it.cor}" stroke-width="1.8" stroke-dasharray="5 3"/>`;
+      c += `<text x="${(x+32).toFixed(1)}" y="18" font-size="11" fill="${it.cor}">${esc(it.txt)}</text>`;
+    }
+    x += largItem(it) + vao;
+  });
+  c += moldura(H,pad,yT,yEsc,null);
+  const larg = (W-pad.l-pad.r)/S.length;
+  const bw = Math.min(26, (larg-14)/2);
+  S.forEach((s,i)=>{
+    const cx = pad.l + larg*i + larg/2;
+    [[s.med,NAVY,rotM],[s.max,TEAL,'Máximo']].forEach(([v,cor,nome],k)=>{
+      if(v==null) return;
+      const x = cx - bw + k*bw, y = yEsc(v);
+      const est_ = s.ref ? ` opacity=".5" stroke="${cor}" stroke-width="1.2" stroke-dasharray="3 2"` : '';
+      c += `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${(bw-2).toFixed(1)}" height="${(H-pad.b-y).toFixed(1)}" fill="${cor}"${est_}>
+        <title>${esc(s.obra)} — ${nome}: ${nf(v,2)}${s.n?'\n'+s.n+' semanas':''}</title></rect>`;
+      c += `<text class="num" x="${(x+(bw-2)/2).toFixed(1)}" y="${(y-4).toFixed(1)}" text-anchor="middle" font-size="9.5"
+        fill="var(--ink)" stroke="#fff" stroke-width="3" paint-order="stroke">${nf(v,casasValor())}</text>`;
+    });
+    const nome = s.obra.length>13 ? s.obra.split(' ')[0] : s.obra;
+    c += `<text x="${cx.toFixed(1)}" y="${H-pad.b+15}" text-anchor="middle" font-size="10" fill="var(--ink)">${esc(nome)}</text>`;
+    const leg = s.ref ? 'benchmark' : (est.tratada ? `${s.nUsadas} de ${s.n} sem.` : `${s.n} sem.`);
+    c += `<text x="${cx.toFixed(1)}" y="${H-pad.b+26}" text-anchor="middle" font-size="8.5" fill="${s.ref?CINZA:'var(--muted)'}">${esc(leg)}</text>`;
+  });
+  if(geral!=null && geral<y1)
+    c += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${yEsc(geral)}" y2="${yEsc(geral)}" stroke="${MEDIA_COR}" stroke-width="1.4" stroke-dasharray="7 4"/>`;
+  if(est.meta>0 && est.meta<y1)
+    c += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${yEsc(est.meta)}" y2="${yEsc(est.meta)}" stroke="${VERM}" stroke-width="1.4" stroke-dasharray="5 3"/>`;
+  svgOut(el,H,c); W = 900;
+}
+
+/* ---------- 2. ranking ---------- */
+function g2(){
+  const el = document.getElementById('g2');
+  const S = seriesObras().slice().sort((a,b)=>b.med-a.med);
+  if(!S.length) return vazio(el,'Nenhuma obra com produção no período.');
+  W = 470;
+  const H = Math.max(178, 62 + S.length*34), pad={l:126,r:46,t:16,b:36};
+  const geral = media(S.map(s=>s.med).filter(v=>v!=null));   // média entre as obras, benchmark incluso
+  const top = Math.max(...S.map(s=>s.med), est.meta)*1.14;
+  const xEsc = v => pad.l + (W-pad.l-pad.r)*v/top;
+  let c = '';
+  eixoTicks(0,top,4).forEach(t=>{ if(t>top) return;
+    c += `<line x1="${xEsc(t).toFixed(1)}" x2="${xEsc(t).toFixed(1)}" y1="${pad.t}" y2="${H-pad.b}" stroke="var(--rule-soft)"/>`;
+    c += `<text class="num" x="${xEsc(t).toFixed(1)}" y="${H-pad.b+15}" text-anchor="middle" font-size="9.5">${nf(t,0)}</text>`; });
+  c += `<line x1="${pad.l}" x2="${pad.l}" y1="${pad.t}" y2="${H-pad.b}" stroke="var(--rule)"/>`;
+  c += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${H-pad.b}" y2="${H-pad.b}" stroke="var(--rule)"/>`;
+  const alt = 20;
+  S.forEach((s,i)=>{
+    const y = pad.t + 8 + i*34;
+    const nome = s.obra.length>17 ? s.obra.slice(0,16)+'…' : s.obra;
+    c += `<text x="${pad.l-7}" y="${y+14}" text-anchor="end" font-size="10.5" fill="${s.ref?CINZA:'var(--ink)'}">${i+1}º ${esc(nome)}${s.ref?' *':''}<title>${esc(s.obra)}</title></text>`;
+    const est_ = s.ref ? ` opacity=".5" stroke="${CINZA}" stroke-width="1.2" stroke-dasharray="3 2"` : '';
+    c += `<rect x="${pad.l}" y="${y}" width="${Math.max(1,xEsc(s.med)-pad.l).toFixed(1)}" height="${alt}" fill="${s.ref?CINZA:NAVY}"${est_}>
+      <title>${esc(s.obra)}: ${nf(s.med,2)} ${unidCurta()}${s.n?'\ncomum '+nf(s.media,2)+' · tratada '+nf(s.ajust,2)+'\n'+s.n+' semanas · máximo '+nf(s.max,2):' (benchmark)'}</title></rect>`;
+    c += `<text class="num" x="${(xEsc(s.med)+5).toFixed(1)}" y="${y+14}" font-size="10" fill="var(--ink)">${nf(s.med,casasValor())}</text>`;
+  });
+  if(geral!=null && geral<top)
+    c += `<line x1="${xEsc(geral).toFixed(1)}" x2="${xEsc(geral).toFixed(1)}" y1="${pad.t}" y2="${H-pad.b}" stroke="${MEDIA_COR}" stroke-width="1.4" stroke-dasharray="7 4"/>`;
+  if(est.meta>0 && est.meta<top)
+    c += `<line x1="${xEsc(est.meta).toFixed(1)}" x2="${xEsc(est.meta).toFixed(1)}" y1="${pad.t}" y2="${H-pad.b}" stroke="${VERM}" stroke-width="1.4" stroke-dasharray="5 3"/>`;
+  svgOut(el,H,c); W = 900;
+  document.getElementById('legG2').innerHTML =
+    `<span><i style="background:${NAVY}"></i>${est.tratada?'produtividade média tratada (P15)':'produtividade média'}</span>` +
+    (geral!=null?`<span>${tracejado(MEDIA_COR)}média geral ${nf(geral,casasValor())} ${unidCurta()}</span>`:'') +
+    (est.meta>0?`<span>${tracejado(VERM)}meta ${nf(est.meta,casasProd())} ${unidCurta()}</span>`:'') +
+    (S.some(s=>s.ref)?`<span><i style="background:${CINZA};opacity:.5"></i>* benchmark — período completo, fora do filtro</span>`:'');
+}
+
+/* ---------- 3. evolução semanal ---------- */
+function g3(){
+  const el = document.getElementById('g3');
+  const dados = comProducao();
+  if(!dados.length) return vazio(el,'Nenhuma semana com produção no período.');
+  const campo = campoProd(est.unid);
+  const chaves = [...new Set(dados.map(chave))].sort((a,b)=>a-b);
+  const idx = new Map(chaves.map((k,i)=>[k,i]));
+  const vals = dados.map(s=>s[campo]).filter(v=>v!=null);
+  const pad={l:48,r:52,t:20,b:44}, H=286+pad.b;
+  const yT = eixoTicks(0, Math.max(...vals, est.meta)*1.12, 4), y1=yT[yT.length-1];
+  const yEsc = v => pad.t + (H-pad.t-pad.b)*(1-v/y1);
+  const xEsc = i => chaves.length===1 ? (pad.l+(W-pad.l-pad.r)/2) : pad.l+(W-pad.l-pad.r)*i/(chaves.length-1);
+  let c = moldura(H,pad,yT,yEsc, unidCurta());
+  if(est.meta>0 && est.meta<y1){
+    c += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${yEsc(est.meta)}" y2="${yEsc(est.meta)}" stroke="${VERM}" stroke-width="1.5" stroke-dasharray="6 3"/>`;
+    c += `<text class="num" x="${W-pad.r+5}" y="${yEsc(est.meta)+4}" font-size="10.5" font-weight="600" fill="${VERM}">${nf(est.meta,1)}</text>`;
+  }
+  const passo = Math.max(1, Math.ceil(chaves.length/18));
+  chaves.forEach((k,i)=>{
+    if(i%passo) return;
+    const x = xEsc(i).toFixed(1), r = rotEixo(k);
+    c += `<text class="num" x="${x}" y="${H-pad.b+14}" text-anchor="middle">${r[0]}</text>`;
+    c += `<text class="num" x="${x}" y="${H-pad.b+24}" text-anchor="middle" font-size="9">${r[1]}</text>`;
+  });
+
+  OBRAS.filter(o=>est.obras.has(o)).forEach(o=>{
+    const pts = dados.filter(s=>s.obra===o && s[campo]!=null)
+      .map(s=>({x:xEsc(idx.get(chave(s))), y:yEsc(s[campo]), s}));
+    if(!pts.length) return;
+    c += `<polyline fill="none" stroke="${HEX[o]}" stroke-width="2" stroke-linejoin="round" points="${pts.map(p=>p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')}"/>`;
+    pts.forEach(p=>{
+      const fora = descartada(p.s);
+      c += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${fora?3.6:3.2}" fill="${fora?'#fff':HEX[o]}" stroke="${HEX[o]}" stroke-width="${fora?1.6:0}" ${fora?'stroke-dasharray="2 1.6"':''}>
+        <title>${esc(o)} — S${p.s.sem} · ${rotMes(EIXO[POSK.get(chave(p.s))])}\n${nf(p.s[campo],2)} ${unidCurta()}${fora?' — descartada pelo corte P15':''}\nÁrea: ${nf(p.s.area,2)} m² · Efetivo: ${nf(p.s.mont,1)}</title></circle>`;
+    });
+  });
+  svgOut(el,H,c);
+  legObras('legG3', [...new Set(dados.map(s=>s.obra))],
+    (est.meta>0?`<span>${tracejado(VERM)}meta ${nf(est.meta,casasProd())} ${unidCurta()}</span>`:'') +
+    (est.tratada?`<span style="opacity:.7">círculo vazado = semana descartada pelo corte P15</span>`:''));
+}
+
+/* ---------- 4. produtividade x tamanho da equipe ---------- */
+function g4(){
+  const el = document.getElementById('g4');
+  const S = seriesObras().filter(s=>s.efetivo>0 && s.med!=null);
+  if(!S.length) return vazio(el,'Sem dados no período.');
+  W = 470;
+  const H=310, pad={l:42,r:20,t:24,b:48};
+  const xT = eixoTicks(0, Math.max(...S.map(s=>s.efetivo))*1.18, 4);
+  const yT = eixoTicks(0, Math.max(...S.map(s=>s.med))*1.22, 4);
+  const x1=xT[xT.length-1], y1=yT[yT.length-1];
+  const xEsc = v => pad.l + (W-pad.l-pad.r)*v/x1;
+  const yEsc = v => pad.t + (H-pad.t-pad.b)*(1-v/y1);
+  let c = moldura(H,pad,yT,yEsc,null);
+  xT.forEach(t=> c += `<text class="num" x="${xEsc(t).toFixed(1)}" y="${H-pad.b+15}" text-anchor="middle" font-size="10.5">${nf(t,0)}</text>`);
+  c += `<text x="${(pad.l+(W-pad.l-pad.r)/2).toFixed(1)}" y="${H-pad.b+32}" text-anchor="middle" font-size="11">Nº médio de montadores por dia</text>`;
+  c += `<text x="${pad.l}" y="${pad.t-7}" font-size="10.5">${unidCurta()}</text>`;
+  // reta de tendência
+  if(S.length>1){
+    const n=S.length, sx=S.reduce((a,s)=>a+s.efetivo,0), sy=S.reduce((a,s)=>a+s.med,0);
+    const sxy=S.reduce((a,s)=>a+s.efetivo*s.med,0), sxx=S.reduce((a,s)=>a+s.efetivo*s.efetivo,0);
+    const den = n*sxx-sx*sx;
+    if(Math.abs(den)>1e-9){
+      const b1=(n*sxy-sx*sy)/den, b0=(sy-b1*sx)/n;
+      const xa=Math.min(...S.map(s=>s.efetivo))*0.85, xb=Math.max(...S.map(s=>s.efetivo))*1.12;
+      const cl = v => Math.max(0, Math.min(y1, v));
+      c += `<line x1="${xEsc(xa).toFixed(1)}" y1="${yEsc(cl(b0+b1*xa)).toFixed(1)}" x2="${xEsc(xb).toFixed(1)}" y2="${yEsc(cl(b0+b1*xb)).toFixed(1)}" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="5 4"/>`;
+    }
+  }
+  if(est.meta>0 && est.meta<y1)
+    c += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${yEsc(est.meta)}" y2="${yEsc(est.meta)}" stroke="${VERM}" stroke-width="1.2" stroke-dasharray="5 3"/>`;
+  S.forEach(s=>{
+    const x=xEsc(s.efetivo), y=yEsc(s.med);
+    const cor = corObra(s);
+    c += `<text x="${x.toFixed(1)}" y="${(y-11).toFixed(1)}" text-anchor="middle" font-size="11" font-weight="600" fill="${cor}">${esc(s.obra)}${s.ref?' *':''}</text>`;
+    c += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.5" fill="${cor}">
+      <title>${esc(s.obra)}\n${nf(s.med,2)} ${unidCurta()} (${est.tratada?'tratada':'comum'}) · ${nf(s.efetivo,1)} montadores${s.n?'\n'+s.n+' semanas':''}</title></circle>`;
+  });
+  svgOut(el,H,c); W = 900;
+}
+
+/* ---------- 5. mapa de calor ---------- */
+function corEscala(t){
+  const p = [[248,105,107],[255,235,132],[99,190,123]];
+  t = Math.max(0, Math.min(1, t));
+  const i = t<0.5 ? 0 : 1, f = t<0.5 ? t/0.5 : (t-0.5)/0.5;
+  const c = p[i].map((v,k)=> Math.round(v + (p[i+1][k]-v)*f));
+  return `rgb(${c.join(',')})`;
+}
+function g5(){
+  const el = document.getElementById('g5');
+  const dados = comProducao();
+  if(!dados.length) return vazio(el,'Nenhuma semana com produção no período.');
+  const campo = campoProd(est.unid);
+  const chaves = [...new Set(dados.map(chave))].sort((a,b)=>a-b);
+  const obras = OBRAS.filter(o=>est.obras.has(o) && dados.some(s=>s.obra===o));
+  const todos = dados.map(s=>s[campo]).filter(v=>v!=null && v>0);
+  const min = Math.min(...todos), max = Math.max(...todos), amp = (max-min)||1;
+  const cab = chaves.map(k=>{ const r=rotEixo(k);
+    return `<th title="${esc(r[0]+' · '+r[1])}">${r[0]}<br><span style="font-weight:400;font-size:9px">${r[1]}</span></th>`; }).join('');
+  const corpo = obras.map(o=>{
+    const cel = chaves.map(k=>{
+      const s = dados.find(z=>z.obra===o && chave(z)===k);
+      const v = s ? s[campo] : null;
+      if(v==null || v<=0) return `<td style="background:#F4F6F9;color:var(--rule)">·</td>`;
+      const fora = descartada(s);
+      const estilo = `background:${corEscala((v-min)/amp)}` + (fora?';opacity:.32;text-decoration:line-through':'');
+      return `<td style="${estilo}" title="${esc(o)} — ${nf(v,2)} ${unidCurta()}${fora?' — descartada pelo corte P15':''}">${nf(v,casasValor())}</td>`;
+    }).join('');
+    return `<tr><td class="obra">${esc(o)}</td>${cel}</tr>`;
+  }).join('');
+  el.innerHTML = `<table><thead><tr><th class="obra">Obra</th>${cab}</tr></thead><tbody>${corpo}</tbody></table>`;
+  const leg = document.getElementById('legG5');
+  if(leg) leg.innerHTML = est.tratada
+    ? `<span><span style="text-decoration:line-through;opacity:.45;font-family:var(--mono)">00,0</span>` +
+      `&nbsp;&nbsp;números riscados = semanas descartadas pelo corte da média tratada (percentil 15)</span>`
+    : '';
+}
+
+/* ---------- rodapé do período ---------- */
+function rodapePeriodo(){
+  const a = EIXO[POSK.get(est.kIni)], b = EIXO[POSK.get(est.kFim)];
+  const n = comProducao().length;
+  const modo = est.tratada
+    ? 'Média tratada: descarta, em cada obra, as semanas abaixo do percentil 15 — mesmo critério da coluna PRODUTIV. MÉDIA AJUST. da planilha.'
+    : 'Média comum: considera todas as semanas com produção.';
+  document.getElementById('rodapePeriodo').textContent =
+    `Período analisado: ${rotSemana(a)} a ${rotSemana(b)} — ${n} ${n===1?'semana':'semanas'} com produção` +
+    `    |    ${modo}    |    Fonte: aba Produt_Montagem-Formas_R02`;
+}
+
+/* ================= CUSTOS ================= */
+function paramCusto(){
+  const v = id => parseFloat(document.getElementById(id).value)||0;
+  return {mont:v('cMont'), ajud:v('cAjud'), ratio:v('cRatio'), grua:v('cGrua'), rat:v('cRat'), sem:v('cSem')||4.345};
+}
+function custoSemana(s,p){
+  const mo = s.mont*p.mont + s.mont*p.ratio*p.ajud;
+  const eq = p.grua*p.rat/100;
+  return (mo+eq)/p.sem;
+}
+function norm(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim(); }
+function orcado(obra){
+  if(!D.areaForma) return null;
+  const alvo = norm(MAPA_ORC[obra] || obra);
+  return D.areaForma.find(a=>norm(a.obra)===alvo)
+      || D.areaForma.find(a=>alvo.includes(norm(a.obra)) || norm(a.obra).includes(alvo))
+      || null;
+}
+
+function custos(){
+  const p = paramCusto();
+  const dados = comProducao();
+  const obras = OBRAS.filter(o=>est.obras.has(o));
+  const linhas = obras.map(o=>{
+    const ss = dados.filter(s=>s.obra===o);
+    const custo = ss.reduce((a,s)=>a+custoSemana(s,p),0);
+    const area  = ss.reduce((a,s)=>a+s.area,0);
+    const vol   = ss.reduce((a,s)=>a+s.vol,0);
+    const orc   = orcado(o);
+    return {o, n:ss.length, custo, area, vol,
+      rsM2: area? custo/area : null,
+      rsM3: vol? custo/vol : null,
+      orcM2: orc? orc.rsPorM2 : null,
+      areaTotal: orc? orc.areaMontagem : null,
+      orcTotal: orc? orc.custoParedeMO : null};
+  }).filter(l=>l.area>0);
+
+  // KPIs
+  const custoT = linhas.reduce((a,l)=>a+l.custo,0);
+  const areaT  = linhas.reduce((a,l)=>a+l.area,0);
+  const volT   = linhas.reduce((a,l)=>a+l.vol,0);
+  const orcMed = media(linhas.filter(l=>l.orcM2).map(l=>l.orcM2));
+  const rsM2 = areaT? custoT/areaT : null;
+  document.getElementById('kpisCusto').innerHTML = [
+    ['Custo da equipe do ciclo', 'R$ '+nf(custoT,0), 'montagem + desforma'],
+    ['Custo unitário realizado', nf(rsM2,2), 'R$/m² de fôrma'],
+    ['Custo por m³ concretado', nf(volT?custoT/volT:null,2), 'R$/m³'],
+    ['Orçado — parede MO', nf(orcMed,2), 'R$/m² (escopo total)'],
+    ['Realizado sobre o orçado', nf(rsM2&&orcMed? rsM2/orcMed*100:null,1)+'%', 'do R$/m² de parede'],
+  ].map(([l,v,u])=>`<div class="kpi"><span class="v">${v}</span><span class="u">${esc(u)}</span><span class="l">${esc(l)}</span></div>`).join('');
+
+  // gráfico semanal
+  const el = document.getElementById('gCustoSem');
+  if(!dados.length){ vazio(el,'Sem dados no filtro.'); }
+  else{
+    const chaves = [...new Set(dados.map(chave))].sort((a,b)=>a-b);
+    const idx = new Map(chaves.map((k,i)=>[k,i]));
+    const H=310, pad={l:56,r:16,t:26,b:54};
+    const vals = dados.map(s=>custoSemana(s,p)/s.area);
+    const top = Math.max(...vals, orcMed||0)*1.1;
+    const yT = eixoTicks(0,top,5), y1=yT[yT.length-1];
+    const yEsc = v => pad.t + (H-pad.t-pad.b)*(1-v/y1);
+    const xEsc = i => chaves.length===1 ? (pad.l+(W-pad.l-pad.r)/2) : pad.l+(W-pad.l-pad.r)*i/(chaves.length-1);
+    let c = moldura(H,pad,yT,yEsc,'R$ por m² de fôrma — ciclo completo');
+    if(orcMed){
+      c += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${yEsc(orcMed)}" y2="${yEsc(orcMed)}" stroke="var(--alerta)" stroke-width="1.5" stroke-dasharray="6 4"/>`;
+      c += `<text class="num" x="${W-pad.r}" y="${yEsc(orcMed)-6}" text-anchor="end" font-size="10" fill="var(--alerta)">orçado parede ${nf(orcMed,2)} R$/m²</text>`;
+    }
+    OBRAS.filter(o=>est.obras.has(o)).forEach(o=>{
+      const pts = dados.filter(s=>s.obra===o).map(s=>({x:xEsc(idx.get(chave(s))), y:yEsc(custoSemana(s,p)/s.area), s}));
+      if(!pts.length) return;
+      c += `<polyline fill="none" stroke="${HEX[o]}" stroke-width="1.9" points="${pts.map(z=>z.x.toFixed(1)+','+z.y.toFixed(1)).join(' ')}"/>`;
+      pts.forEach(z=> c += `<circle cx="${z.x.toFixed(1)}" cy="${z.y.toFixed(1)}" r="3" fill="${HEX[o]}">
+        <title>${esc(o)} — S${z.s.sem}: R$ ${nf(custoSemana(z.s,p)/z.s.area,2)}/m²
+Custo da semana: R$ ${nf(custoSemana(z.s,p),0)} · ${nf(z.s.area,2)} m²</title></circle>`);
+    });
+    const passo = Math.max(1, Math.ceil(chaves.length/14));
+    chaves.forEach((k,i)=>{ if(i%passo) return;
+      const x = xEsc(i).toFixed(1), r = rotEixo(k);
+      c += `<text class="num" x="${x}" y="${H-pad.b+15}" text-anchor="middle">${r[0]}</text>`;
+      c += `<text class="num" x="${x}" y="${H-pad.b+26}" text-anchor="middle" font-size="9">${r[1]}</text>`; });
+    svgOut(el,H,c);
+    legObras('legCustoSem', [...new Set(dados.map(s=>s.obra))],
+      orcMed?`<span><i class="dash" style="border-color:var(--alerta)"></i>orçado parede ${nf(orcMed,2)} R$/m²</span>`:'');
+  }
+
+  // realizado x orçado
+  const el2 = document.getElementById('gCustoObra');
+  if(!linhas.length){ vazio(el2,'Sem dados no filtro.'); }
+  else{
+    const H = 50 + linhas.length*66, pad={l:120,r:70,t:26,b:34};
+    const top = Math.max(...linhas.map(l=>Math.max(l.rsM2||0, l.orcM2||0)))*1.12;
+    const xEsc = v => pad.l + (W-pad.l-pad.r)*v/top;
+    let c='';
+    eixoTicks(0,top,5).forEach(t=>{ if(t>top) return;
+      c += `<line x1="${xEsc(t)}" x2="${xEsc(t)}" y1="${pad.t}" y2="${H-pad.b}" stroke="var(--rule-soft)"/>`;
+      c += `<text class="num" x="${xEsc(t)}" y="${H-pad.b+15}" text-anchor="middle">${nf(t,0)}</text>`; });
+    linhas.forEach((l,i)=>{
+      const y = pad.t+12+i*66;
+      c += `<text x="0" y="${y+10}" font-size="12" fill="var(--ink)" font-weight="600">${esc(l.o)}</text>`;
+      c += `<text x="0" y="${y+25}" font-size="10">${l.n} semanas</text>`;
+      c += `<rect x="${pad.l}" y="${y}" width="${(xEsc(l.rsM2)-pad.l).toFixed(1)}" height="17" fill="${HEX[l.o]}" opacity=".9">
+        <title>Ciclo realizado: R$ ${nf(l.rsM2,2)}/m²</title></rect>`;
+      c += `<text class="num" x="${xEsc(l.rsM2)+6}" y="${y+12}" font-size="10" fill="var(--ink)" font-weight="600">${nf(l.rsM2,2)}</text>`;
+      if(l.orcM2){
+        c += `<rect x="${pad.l}" y="${y+22}" width="${(xEsc(l.orcM2)-pad.l).toFixed(1)}" height="17" fill="none" stroke="var(--alerta)" stroke-width="1.4" stroke-dasharray="4 3">
+          <title>Orçado parede MO: R$ ${nf(l.orcM2,2)}/m²</title></rect>`;
+        c += `<text class="num" x="${xEsc(l.orcM2)+6}" y="${y+34}" font-size="10" fill="var(--alerta)">${nf(l.orcM2,2)}</text>`;
+      }
+    });
+    c += `<text x="${W-pad.r}" y="${H-pad.b+30}" text-anchor="end" font-size="10.5">R$/m²</text>`;
+    svgOut(el2,H,c);
+    legObras('legCustoObra', linhas.map(l=>l.o),
+      `<span style="opacity:.7">barra cheia = realizado (montagem + desforma)</span>
+       <span><i class="dash" style="border-color:var(--alerta)"></i>orçado parede MO (escopo total)</span>`);
+  }
+
+  // tabela
+  document.getElementById('tabCusto').innerHTML =
+    `<thead><tr><th class="esq">Obra</th><th>Semanas</th><th>Área do ciclo (m²)</th><th>Custo M.O. ciclo (R$)</th>
+     <th>R$/m² real.</th><th>R$/m³ real.</th><th>R$/m² orçado</th><th>% do orçado</th>
+     <th>Área total prevista (m²)</th><th>Projeção do ciclo (R$)</th><th>Orçado parede MO (R$)</th></tr></thead><tbody>` +
+    linhas.map(l=>{
+      const pct = l.rsM2&&l.orcM2 ? l.rsM2/l.orcM2*100 : null;
+      const proj = l.rsM2&&l.areaTotal ? l.rsM2*l.areaTotal : null;
+      return `<tr><td class="esq"><span class="tagobra"><span class="pt" style="background:${HEX[l.o]}"></span>${esc(l.o)}</span></td>
+      <td class="n">${l.n}</td><td class="n">${nf(l.area,0)}</td><td class="n">${nf(l.custo,0)}</td>
+      <td class="n">${nf(l.rsM2,2)}</td><td class="n">${nf(l.rsM3,2)}</td><td class="n">${nf(l.orcM2,2)}</td>
+      <td class="n ${pct!=null?(pct>100?'baixo':'alto'):''}">${pct!=null?nf(pct,1)+'%':'—'}</td>
+      <td class="n">${nf(l.areaTotal,0)}</td><td class="n">${nf(proj,0)}</td><td class="n">${nf(l.orcTotal,0)}</td></tr>`;
+    }).join('') + `</tbody>`;
+}
+
+function tabelaAF(){
+  document.getElementById('tabAF').innerHTML =
+    `<thead><tr><th class="esq">Obra</th><th class="esq">Tipologia</th><th>Aptos</th><th>Área fôrma s/ laje (m²)</th>
+     <th>Área de montagem (m²)</th><th>Índice fôrma/laje</th><th>Custo parede MO (R$)</th><th>R$/m²</th>
+     <th>R$/apto</th><th>R$/m² c/ instalações</th></tr></thead><tbody>` +
+    D.areaForma.map(a=>`<tr><td class="esq">${esc(a.obra)}</td><td class="esq">${esc(a.tipologia)}</td>
+      <td class="n">${nf(a.aptos,0)}</td><td class="n">${nf(a.areaFormaSLaje,0)}</td><td class="n">${nf(a.areaMontagem,0)}</td>
+      <td class="n">${nf(a.indice,3)}</td><td class="n">${nf(a.custoParedeMO,0)}</td><td class="n">${nf(a.rsPorM2,2)}</td>
+      <td class="n">${nf(a.rsPorApto,0)}</td><td class="n">${nf(a.totalPorM2,2)}</td></tr>`).join('') + `</tbody>`;
+}
+
+/* ---------- base semanal ---------- */
+function tabelaSemanal(){
+  const dados = filtradas();
+  const campo = campoProd(est.unid);
+  document.getElementById('tabSem').innerHTML =
+    `<thead><tr><th class="esq">Obra</th><th>Sem.</th><th class="esq">Período</th><th>Concret.</th><th>Feriados</th>
+     <th>Área (m²)</th><th>Volume (m³)</th><th>Montadores</th><th>Dias</th><th>Horas</th>
+     <th>m²/dia</th><th>m²/h</th><th>m³/dia</th><th>m³/m²</th></tr></thead><tbody>` +
+    dados.map(s=>{
+      const campoT = campoProd(est.unid), vT = s[campoT];
+      const abaixo = vT!=null && s.area>0 && est.meta>0 && vT<est.meta;
+      return `<tr><td class="esq"><span class="tagobra"><span class="pt" style="background:${HEX[s.obra]}"></span>${esc(s.obra)}</span></td>
+      <td class="n">${s.sem}</td><td class="esq n">${esc(s.periodo)}</td><td class="n">${nf(s.concr,0)}</td><td class="n">${nf(s.feriados,0)}</td>
+      <td class="n">${nf(s.area,2)}</td><td class="n">${nf(s.vol,0)}</td><td class="n">${nf(s.mont,1)}</td>
+      <td class="n">${nf(s.dias,1)}</td><td class="n">${nf(s.horas,1)}</td>
+      <td class="n ${abaixo&&campoT==='pm2dia'?'baixo':''}">${nf(s.pm2dia,2)}</td>
+      <td class="n ${abaixo&&campoT==='pm2h'?'baixo':''}">${nf(s.pm2h,3)}</td>
+      <td class="n ${abaixo&&campoT==='pm3dia'?'baixo':''}">${nf(s.pm3dia,2)}</td>
+      <td class="n">${nf(s.esp,4)}</td></tr>`;
+    }).join('') + `</tbody>`;
+}
+
+function tabelaSugestao(){
+  const linhas = [
+    ['ÁREA DESFORMADA (m²)','Número','Hoje a área é contada uma vez por ciclo. Lançar a desforma em separado permite ver retrabalho e trechos desformados sem remontagem imediata.'],
+    ['HORAS DE MONTAGEM / HORAS DE DESFORMA','Número','Divide o HH do ciclo entre as duas operações. É o que falta para saber qual das duas puxa a produtividade para baixo.'],
+    ['IDADE DE DESFORMA (h)','Número','Horas entre a concretagem e a retirada da fôrma. Indicador de risco estrutural e de giro do conjunto.'],
+    ['JOGOS DE FÔRMA EM OBRA','Número','Denominador do giro. Sem ele não dá para dizer se o ciclo é limitado por equipe ou por quantidade de fôrma.'],
+    ['MOTIVO DE PARADA','Lista','Chuva, falta de concreto, armação atrasada, falta de efetivo. Explica as semanas fora da meta de 40 m²/dia.'],
+    ['APTOS POR TRECHO','Número','A BD-Obras descreve os aptos em texto. Quantificado, fecha o custo por apartamento contra a proposta de R$ 6.400 / R$ 6.800.'],
+    ['COMPOSIÇÃO DA EQUIPE','Números','Montadores, ajudantes e armadores em separado. Hoje só há a média de montadores, o que limita a precisão do custo.'],
+  ];
+  document.getElementById('tabSug').innerHTML =
+    `<thead><tr><th class="esq">Coluna sugerida</th><th class="esq">Tipo</th><th class="esq">Para que serve</th></tr></thead><tbody>` +
+    linhas.map(l=>`<tr><td class="esq"><b>${esc(l[0])}</b></td><td class="esq">${esc(l[1])}</td><td class="esq" style="white-space:normal">${esc(l[2])}</td></tr>`).join('') +
+    `</tbody>`;
+  const n = D.semanas.length, np = D.semanas.filter(s=>s.area>0).length;
+  document.getElementById('rodape').textContent =
+    `Base: ${n} registros semanais na aba Produt_Montagem-Formas_R02, dos quais ${np} com produção apontada. `+
+    `O efetivo e as horas apontados cobrem o ciclo completo de fôrma — montagem e desmontagem. `+
+    `Custos: BD-Custos (salários com encargos, fator 1,90) e aba Área Forma da planilha M_O_ESTRUTURA_rev1. `+
+    `As linhas sem produção representam semanas de planejamento ainda não realizadas ou obra fora do período de fôrma.`;
+}
+
+/* ---------- render ---------- */
+function render(){
+  if(!D) return;
+  textosUnidade(); cartoes(); g1(); g2(); g3(); g4(); g5(); rodapePeriodo();
+  custos(); tabelaSemanal();
+}
+
+/* ---------- controles ---------- */
+function montaChips(){
+  const box = document.getElementById('chipsObra');
+  box.innerHTML = OBRAS.map(o=>
+    `<button class="chip" data-o="${esc(o)}" aria-pressed="true"><span class="pt" style="background:${HEX[o]}"></span>${esc(o)}</button>`).join('');
+  box.querySelectorAll('.chip').forEach(b=> b.addEventListener('click',()=>{
+    const o=b.dataset.o;
+    if(est.obras.has(o)){ if(est.obras.size===1) return; est.obras.delete(o); b.setAttribute('aria-pressed','false'); }
+    else { est.obras.add(o); b.setAttribute('aria-pressed','true'); }
+    render();
+  }));
+  document.getElementById('metaObras').textContent = OBRAS.join(' · ');
+}
+const inMeta = document.getElementById('inMeta');
+function ajustaCampoMeta(){
+  est.meta = est.metas[est.unid];
+  inMeta.value = est.meta;
+  inMeta.step = est.unid==='m2' ? 0.5 : est.unid==='concr' ? 1 : 0.1;
+  document.getElementById('unMeta').textContent = rotuloProd(est.unid);
+}
+document.getElementById('segUnid').querySelectorAll('button').forEach(b=> b.addEventListener('click',()=>{
+  est.metas[est.unid] = est.meta;          // guarda a meta da unidade que sai
+  est.unid = b.dataset.u;
+  document.getElementById('segUnid').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
+  ajustaCampoMeta();
+  render();
+}));
+/* o balão de ajuda também abre no toque, para telas sem mouse */
+(function(){
+  const aj = document.getElementById('ajudaP15');
+  if(!aj) return;
+  // tocar no "i" abre a explicação sem trocar o modo de média
+  aj.addEventListener('click', e=>{ e.stopPropagation(); aj.classList.toggle('aberto'); });
+  document.addEventListener('click', ()=> aj.classList.remove('aberto'));
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') aj.classList.remove('aberto'); });
+})();
+inMeta.addEventListener('input', e=>{
+  est.meta = parseFloat(e.target.value)||0;
+  est.metas[est.unid] = est.meta;
+  render();
+});
+
+/* ---------- controle único de período ---------- */
+const rgIni = document.getElementById('rgIni'), rgFim = document.getElementById('rgFim');
+function montaPeriodo(){
+  const n = EIXO.length - 1;
+  [rgIni,rgFim].forEach(r=>{ r.min=0; r.max=n; r.step=1; });
+  rgIni.value = 0; rgFim.value = n;
+  est.kIni = EIXO[0].k; est.kFim = EIXO[n].k;
+
+  // escala de meses sob a barra
+  const esc = document.getElementById('escalaMeses');
+  const marcos = [];
+  EIXO.forEach((e,i)=>{
+    const ant = EIXO[i-1];
+    if(!ant || ant.mes!==e.mes || ant.anoMes!==e.anoMes) marcos.push({i,e});
+  });
+  const passo = Math.ceil(marcos.length/7);
+  esc.innerHTML = marcos.map((m,idx)=>{
+    const pos = n ? (m.i/n*100) : 50;
+    const mostra = idx % passo === 0;
+    return `<i style="left:${pos}%"></i>` +
+      (mostra ? `<span style="left:${pos}%">${rotMes(m.e)}</span>` : '');
+  }).join('');
+}
+function aplicaPeriodo(veioDoMes){
+  let a = +rgIni.value, b = +rgFim.value;
+  if(a > b){ [a,b] = [b,a]; }
+  if(!veioDoMes) sincronizaMes(a,b);
+  est.kIni = EIXO[a].k; est.kFim = EIXO[b].k;
+  const n = EIXO.length - 1;
+  const cheia = document.getElementById('faixaCheia');
+  cheia.style.left  = (n ? a/n*100 : 0) + '%';
+  cheia.style.width = (n ? (b-a)/n*100 : 100) + '%';
+  document.getElementById('lblPeriodo').textContent =
+    a===b ? rotSemana(EIXO[a]) : `${rotSemana(EIXO[a])}  →  ${rotSemana(EIXO[b])}`;
+  render();
+}
+[rgIni,rgFim].forEach(r=>{
+  r.addEventListener('input', ()=>aplicaPeriodo(false));
+  r.addEventListener('change', ()=>aplicaPeriodo(false));
+});
+document.getElementById('btTudo').addEventListener('click', ()=>{
+  rgIni.value = 0; rgFim.value = EIXO.length-1; aplicaPeriodo();
+});
+
+/* ---------- atalho por mês ---------- */
+const selMes = document.getElementById('selMes');
+function montaSeletorMes(){
+  selMes.innerHTML = '<option value="todos">Todos os meses</option>' +
+    MESES.map(m=>`<option value="${m.id}">${esc(m.rot)} — ${m.semanas} ${m.semanas>1?'semanas':'semana'}</option>`).join('');
+}
+selMes.addEventListener('change', ()=>{
+  if(selMes.value === 'todos'){ rgIni.value = 0; rgFim.value = EIXO.length-1; }
+  else {
+    const m = MESES.find(x=>x.id===selMes.value);
+    if(!m) return;
+    rgIni.value = m.ini; rgFim.value = m.fim;
+  }
+  aplicaPeriodo(true);
+});
+/* mantém o seletor coerente quando o período é ajustado pela barra */
+function sincronizaMes(a,b){
+  const m = MESES.find(x=>x.ini===a && x.fim===b);
+  let alvo;
+  if(m) alvo = m.id;
+  else if(a===0 && b===EIXO.length-1) alvo = 'todos';
+  else {
+    alvo = 'custom';
+    if(!selMes.querySelector('option[value="custom"]')){
+      const op = document.createElement('option');
+      op.value = 'custom'; op.textContent = 'Período personalizado';
+      selMes.appendChild(op);
+    }
+  }
+  if(alvo !== 'custom'){
+    const antigo = selMes.querySelector('option[value="custom"]');
+    if(antigo) antigo.remove();
+  }
+  selMes.value = alvo;
+}
+document.getElementById('ckZero').addEventListener('change', e=>{ est.zeros = e.target.checked; render(); });
+document.getElementById('ckAltus').addEventListener('change', e=>{ est.altus = e.target.checked; render(); });
+document.getElementById('segMedia').querySelectorAll('button').forEach(b=> b.addEventListener('click',()=>{
+  est.tratada = b.dataset.t === '1';
+  document.getElementById('segMedia').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
+  render();
+}));
+
+['cMont','cAjud','cRatio','cGrua','cRat','cSem'].forEach(id=>
+  document.getElementById(id).addEventListener('input', custos));
+
+document.querySelectorAll('nav.abas button').forEach(b=> b.addEventListener('click',()=>{
+  document.querySelectorAll('nav.abas button').forEach(x=>x.setAttribute('aria-selected', String(x===b)));
+  ['p-prod','p-custo','p-dados'].forEach(id=>
+    document.getElementById(id).classList.toggle('oculto', id!==b.getAttribute('aria-controls')));
+}));
+
+
+/* ---------- carga dos dados ---------- */
+function valido(j){ return j && Array.isArray(j.semanas) && j.semanas.length; }
+
+async function carregar(){
+  try{
+    const r = await fetch(CONFIG.fonte + '?v=' + Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    if(!valido(j)) throw new Error('arquivo sem registros de semana');
+    return {dados:j, origem:'publicada'};
+  }catch(e){
+    const emb = document.getElementById('dados');
+    const j = emb ? JSON.parse(emb.textContent) : null;
+    if(!valido(j)) return {dados:null, origem:'falha', erro:e.message};
+    return {dados:j, origem:'embutida', erro:e.message};
+  }
+}
+
+function mostraOrigem(origem, erro){
+  const el = document.getElementById('metaOrigem'); if(!el) return;
+  if(origem==='publicada'){ el.textContent = 'atualização automática'; el.style.color = 'var(--ok)'; }
+  else { el.textContent = 'cópia local do arquivo'; el.style.color = 'var(--alerta)'; el.title = 'Não foi possível ler ' + CONFIG.fonte + (erro?' — '+erro:''); }
+}
+
+function carimbo(){
+  const f = (v, fmt) => { if(!v) return '—'; const d = new Date(v); return isNaN(d) ? String(v) : d.toLocaleString('pt-BR', fmt); };
+  const a = document.getElementById('metaAtu'), g = document.getElementById('metaGerado');
+  if(a) a.textContent = f(D.atualizacaoPlanilha, {day:'2-digit',month:'2-digit',year:'numeric'});
+  if(g) g.textContent = f(D.geradoEm, {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+
+async function iniciar(){
+  const {dados, origem, erro} = await carregar();
+  if(!dados){
+    document.querySelector('.wrap').innerHTML =
+      `<div class="aviso" style="margin-top:20px"><b>Não foi possível carregar os dados.</b> ` +
+      `O painel tentou ler <code>${esc(CONFIG.fonte)}</code> e falhou (${esc(erro||'motivo desconhecido')}). ` +
+      `Verifique se o arquivo existe no servidor e se a rotina de atualização rodou.</div>`;
+    return;
+  }
+  D = dados;
+  OBRAS = [...new Set(D.semanas.map(s=>s.obra))].sort();
+  OBRAS.forEach(o=>{
+    if(HEX[o]) return;
+    const usadas = new Set(OBRAS.map(x=>HEX[x]).filter(Boolean));
+    HEX[o] = PALETA.find(c=>!usadas.has(c)) || PALETA[OBRAS.indexOf(o) % PALETA.length];
+  });
+  est.obras = new Set(OBRAS);
+  // o benchmark só faz sentido enquanto a obra não tiver lançamento semanal
+  const ck = document.getElementById('ckAltus');
+  if(ck && OBRAS.includes('Altus Vila Prudente')){
+    est.altus = false; ck.checked = false;
+    const rot = ck.closest('label'); if(rot) rot.style.display = 'none';
+  }
+  montaEixo(); montaMeses();
+  ajustaCampoMeta();
+  montaChips(); montaPeriodo(); montaSeletorMes(); tabelaAF(); tabelaSugestao(); aplicaPeriodo();
+  carimbo(); mostraOrigem(origem, erro);
+}
+iniciar();
+})();
+
+</script>
+</body>
+</html>
